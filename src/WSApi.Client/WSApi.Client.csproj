@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        
+        <!-- Package Information -->
+        <PackageId>WSApi.Client</PackageId>
+        <Version>1.0.1</Version>
+        <Authors>WSApi</Authors>
+        <Company>WSApi</Company>
+        <Description>A .NET SDK for integrating with the WSApi API, enabling developers to send WhatsApp messages, manage groups and chats, and receive real-time events via Webhooks or Server-Sent Events (SSE).</Description>
+        <PackageTags>whatsapp;api;messaging;sms;chat;webhook;sse;real-time</PackageTags>
+        <PackageProjectUrl>https://github.com/wsapi-chat/wsapi-dotnet</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/wsapi-chat/wsapi-dotnet</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageIcon>wsapi-logo.png</PackageIcon>
+        
+        <!-- Assembly Information -->
+        <AssemblyTitle>WSApi.Client</AssemblyTitle>
+        <AssemblyDescription>WSApi .NET Client SDK</AssemblyDescription>
+        <AssemblyCompany>WSApi</AssemblyCompany>
+        <AssemblyProduct>WSApi.Client</AssemblyProduct>
+        <AssemblyCopyright>Copyright © WSApi 2025</AssemblyCopyright>
+        
+        <!-- Build Configuration -->
+        <LangVersion>latest</LangVersion>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        
+        <!-- Documentation -->
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <TargetFrameworks>net7.0;net8.0;net9.0</TargetFrameworks>
+    </PropertyGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)'=='net7.0'">
+        <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.*" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
+        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.*" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)'=='net9.0'">
+        <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.*" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="wsapi-logo.png" Pack="true" PackagePath="\" />
+    </ItemGroup>
+</Project>

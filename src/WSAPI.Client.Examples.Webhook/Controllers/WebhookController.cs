@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WSApi.Client;
-using WSAPI.Client.Examples.Web.Authorization;
+using WSAPI.Client.Examples.Webhook.Authorization;
 using WSApi.Client.Models.Constants;
 using WSApi.Client.Models.Events.Messages;
 
-namespace WSAPI.Client.Examples.Web.Controllers;
+namespace WSAPI.Client.Examples.Webhook.Controllers;
 
 [ApiController]
 [Route("wsapi")]
-public class WebhookController(IConfiguration configuration, ILogger<WebhookController> logger) : ControllerBase
+public class WebhookController(ILogger<WebhookController> logger) : ControllerBase
 {
     [WebhookAuthorization]
     [HttpPost("webhook")]

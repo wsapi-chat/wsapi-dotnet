@@ -14,6 +14,7 @@ var instanceId = builder.Configuration["WSAPI:InstanceId"] ?? throw new InvalidO
 builder.Services.AddWsApiClient(apiKey,  instanceId);
 //End WSAPI Config
 
+//Add Webhook controller
 builder.Services.AddControllers();
 
 var app = builder.Build();

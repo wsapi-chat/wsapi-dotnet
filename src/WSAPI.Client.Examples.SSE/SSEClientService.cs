@@ -1,13 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using WSApi.Client;
+﻿using WSApi.Client;
 using WSApi.Client.Models.Constants;
 using WSApi.Client.Models.Events.Messages;
-using WSApi.Client.Models.Events.Session;
 using WSApi.Client.SSE;
 
-namespace WSAPI.Client.Examples.Console;
+namespace WSAPI.Client.Examples.SSE;
 
 public class SSEClientService : BackgroundService
 {

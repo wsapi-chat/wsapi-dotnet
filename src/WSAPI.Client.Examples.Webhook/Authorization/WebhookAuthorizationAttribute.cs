@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace WSAPI.Client.Examples.Web.Authorization;
+namespace WSAPI.Client.Examples.Webhook.Authorization;
 
 public class WebhookAuthorizationAttribute : Attribute, IAuthorizationFilter
 {

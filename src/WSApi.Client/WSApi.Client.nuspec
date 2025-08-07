@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>WSApi.Client</id>
+    <version>$version$</version>
+    <title>WSApi.Client</title>
+    <authors>WSApi</authors>
+    <owners>WSApi</owners>
+    <description>A .NET SDK for integrating with the WSApi API, enabling developers to send WhatsApp messages, manage groups and chats, and receive real-time events via Webhooks or Server-Sent Events (SSE).</description>
+    <releaseNotes>Initial release of WSApi.Client SDK</releaseNotes>
+    <summary>WhatsApp API client for .NET with support for messaging, webhooks, and real-time events</summary>
+    <language>en-US</language>
+    <projectUrl>https://github.com/wsapi-chat/wsapi-dotnet</projectUrl>
+    <iconUrl>https://wsapi.chat/favicon.ico</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/wsapi-chat/wsapi-dotnet/blob/main/LICENSE</licenseUrl>
+    <copyright>Copyright © WSApi 2025</copyright>
+    <dependencies>
+      <group targetFramework=".NETFramework9.0">
+        <dependency id="Microsoft.Extensions.Http" version="8.0.0" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="8.0.0" />
+        <dependency id="Microsoft.Extensions.Logging.Abstractions" version="8.0.0" />
+        <dependency id="System.Text.Json" version="8.0.0" />
+      </group>
+    </dependencies>
+    <tags>whatsapp api messaging sms chat webhook sse real-time</tags>
+  </metadata>
+</package>

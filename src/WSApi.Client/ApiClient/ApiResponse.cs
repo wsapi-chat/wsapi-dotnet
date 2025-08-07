@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace WSApi.Client.ApiClient;
 
 public class ApiResponse<T>
