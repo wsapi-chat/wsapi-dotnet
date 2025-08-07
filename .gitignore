@@ -1,0 +1,48 @@
+# .NET build output
+bin/
+obj/
+
+# Rider & JetBrains IDEs
+*.idea/
+*.sln.iml
+*.user
+*.suo
+*.DotSettings*
+
+# macOS system files
+.DS_Store
+
+# User-specific files
+*.userprefs
+
+# VS Code settings (if used)
+.vscode/
+
+# Logs
+*.log
+
+# Other common ignores
+*.swp
+*.tmp
+
+# Ignore nested .idea folders
+**/.idea/
+
+# Ignore build output everywhere
+**/bin/
+**/obj/
+
+# Ignore Rider workspace files
+*.ipr
+*.iws
+
+# Ignore test results
+TestResults/
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Ignore local configuration
+appsettings.Development.json 
