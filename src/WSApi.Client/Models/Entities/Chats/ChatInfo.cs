@@ -6,6 +6,7 @@ namespace WSApi.Client.Models.Entities.Chats;
 public record ChatInfo
 {
     [JsonPropertyName("id")] public string Id { get; init; } = null!;
+    [JsonPropertyName("lid")] public string? Lid { get; init; } = null!;
     [JsonPropertyName("isReadOnly")] public bool IsReadOnly { get; init; }
     [JsonPropertyName("isGroup")] public bool IsGroup { get; init; }
     [JsonPropertyName("isArchived")] public bool IsArchived { get; init; }
