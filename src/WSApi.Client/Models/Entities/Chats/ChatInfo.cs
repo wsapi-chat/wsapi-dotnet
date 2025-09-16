@@ -12,7 +12,7 @@ public record ChatInfo
     [JsonPropertyName("isArchived")] public bool IsArchived { get; init; }
     [JsonPropertyName("isPinned")] public bool IsPinned { get; init; }
     [JsonPropertyName("isEphemeral")] public bool IsEphemeral { get; init; }
-    [JsonPropertyName("ephemeralExpiration")] public int EphemeralExpiration { get; init; }
+    [JsonPropertyName("ephemeralExpiration")] public string? EphemeralExpiration { get; init; }
     [JsonPropertyName("isMuted")] public bool IsMuted { get; init; }
     [JsonPropertyName("muteEndTime")] public DateTime? MuteEndTime { get; init; }
     [JsonPropertyName("isSpam")] public bool IsSpam { get; init; }
