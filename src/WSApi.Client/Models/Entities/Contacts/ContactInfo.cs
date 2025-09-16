@@ -5,6 +5,7 @@ namespace WSApi.Client.Models.Entities.Contacts;
 public record ContactInfo
 {
     [JsonPropertyName("id")] public string Id { get; init; } = null!;
+    [JsonPropertyName("lid")] public string? Lid { get; init; } = null!;
     [JsonPropertyName("fullName")] public string FullName { get; init; } = null!;
     [JsonPropertyName("businessName")] public string BusinessName { get; init; } = null!;
     [JsonPropertyName("pushName")] public string PushName { get; init; } = null!;
