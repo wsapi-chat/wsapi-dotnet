@@ -16,5 +16,8 @@ public record ChatInfo
     [JsonPropertyName("isMuted")] public bool IsMuted { get; init; }
     [JsonPropertyName("muteEndTime")] public DateTime? MuteEndTime { get; init; }
     [JsonPropertyName("isSpam")] public bool IsSpam { get; init; }
+    [JsonPropertyName("businessName")] public string BusinessName { get; init; } = null!;
+    [JsonPropertyName("pushName")] public string PushName { get; init; } = null!;
+    [JsonPropertyName("status")] public string Status { get; init; } = null!;
 }
 

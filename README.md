@@ -396,6 +396,7 @@ The SDK supports the following event types that you can handle in your applicati
 - `SessionLoggedInEvent` - When the WhatsApp session is established
 - `SessionLoggedOutEvent` - When the session is terminated
 - `SessionLoggedErrorEvent` - When there's an authentication error
+- `SessionInitialSyncFinishedEvent` - When the initial synchronization has finished
 
 **Message Events:**
 - `MessageEvent` - New incoming/outgoing messages
@@ -407,14 +408,14 @@ The SDK supports the following event types that you can handle in your applicati
 **Chat Events:**
 - `ChatPresenceEvent` - User typing indicators, online status
 - `ChatSettingEvent` - Chat settings changes
+- `ChatPushNameEvent` - Chat display name changes
+- `ChatPictureEvent` - Chat picture updates
+- `ChatPresenceEvent` - Chat Online/offline status changes
 
 **Contact Events:**
 - `ContactEvent` - Contact information updates
 
 **User Events:**
-- `UserPushNameEvent` - User display name changes
-- `UserPictureEvent` - Profile picture updates
-- `UserPresenceEvent` - Online/offline status changes
 - `UserStatusEvent` - Status message updates
 
 **Call Events:**

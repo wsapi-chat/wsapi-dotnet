@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace WSApi.Client.Models.Entities.Contacts;
+namespace WSApi.Client.Models.Entities.Chats;
 
-public record ContactPicture
+public record ChatPicture
 {
     [JsonPropertyName("pictureId")] public string PictureId { get; init; } = null!;
     [JsonPropertyName("pictureUrl")] public string PictureUrl { get; init; } = null!;

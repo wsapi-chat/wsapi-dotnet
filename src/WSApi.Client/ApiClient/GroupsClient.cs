@@ -20,12 +20,6 @@ public class GroupsClient(HttpClient httpClient) : IGroupsClient
         var response = await httpClient.GetAsync($"/groups/{groupId}", cancellationToken);
         return await response.EnsureSuccessOrThrowJsonAsync<GroupInfo>();
     }
-    public async Task<GroupPictureInfo> GetPictureAsync(string groupId, CancellationToken cancellationToken = default)
-    {
-        var response = await httpClient.GetAsync($"/groups/{groupId}/picture", cancellationToken);
-        return await response.EnsureSuccessOrThrowJsonAsync<GroupPictureInfo>();
-    }
-
     public async Task<GroupCreated> CreateAsync(GroupCreateRequest groupCreateRequest, CancellationToken cancellationToken = default)
     {
         var response = await httpClient.PostAsJsonAsync("/groups", groupCreateRequest, cancellationToken: cancellationToken);
@@ -65,12 +59,6 @@ public class GroupsClient(HttpClient httpClient) : IGroupsClient
         return await response.ReadAsApiResponseJsonAsync<GroupInfo>();
     }
 
-    public async Task<ApiResponse<GroupPictureInfo>> TryGetPictureAsync(string groupId, CancellationToken cancellationToken = default)
-    {
-        var response = await httpClient.GetAsync($"/groups/{groupId}/picture", cancellationToken);
-        return await response.ReadAsApiResponseJsonAsync<GroupPictureInfo>();
-    }
-
     public async Task<ApiResponse<GroupCreated>> TryCreateAsync(GroupCreateRequest groupCreateRequest, CancellationToken cancellationToken = default)
     {
         var response = await httpClient.PostAsJsonAsync("/groups", groupCreateRequest, cancellationToken: cancellationToken);
@@ -102,7 +90,6 @@ public interface IGroupsClient
 {
     Task<GroupInfo[]> ListAsync(CancellationToken cancellationToken = default);
     Task<GroupInfo> GetAsync(string groupId, CancellationToken cancellationToken = default);
-    Task<GroupPictureInfo> GetPictureAsync(string groupId, CancellationToken cancellationToken = default);
 
     Task<GroupCreated> CreateAsync(GroupCreateRequest groupCreateRequest, CancellationToken cancellationToken = default);
     
@@ -114,7 +101,6 @@ public interface IGroupsClient
     
     Task<ApiResponse<GroupInfo[]>> TryListAsync(CancellationToken cancellationToken = default);
     Task<ApiResponse<GroupInfo>> TryGetAsync(string groupId, CancellationToken cancellationToken = default);
-    Task<ApiResponse<GroupPictureInfo>> TryGetPictureAsync(string groupId, CancellationToken cancellationToken = default);
     Task<ApiResponse<GroupCreated>> TryCreateAsync(GroupCreateRequest groupCreateRequest, CancellationToken cancellationToken = default);
     Task<ApiResponse> TryUpdateDescriptionAsync(string groupId, GroupUpdateDescriptionRequest groupUpdateDescriptionRequest, CancellationToken cancellationToken = default);
     Task<ApiResponse> TryUpdateNameAsync(string groupId, GroupUpdateNameRequest groupUpdateNameRequest, CancellationToken cancellationToken = default);

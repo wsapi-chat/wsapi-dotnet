@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
 using WSApi.Client.Models.Entities.Users;
 
-namespace WSApi.Client.Models.Events.Users;
+namespace WSApi.Client.Models.Events.Chats;
 
-public record UserPictureEvent : BaseEvent
+public record ChatPictureEvent : BaseEvent
 {
     [JsonPropertyName("id")] public string Id { get; init; } = null!;
     [JsonPropertyName("sender")] public Sender Sender { get; init; } = null!;

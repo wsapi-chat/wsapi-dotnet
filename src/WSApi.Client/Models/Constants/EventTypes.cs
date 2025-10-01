@@ -6,6 +6,8 @@ public class EventTypes
     public const string LoggedError = "logged_error";
     public const string LoggedOut = "logged_out";
     
+    public const string InitialSyncFinished ="initial_sync_finished";
+
     public const string ChatPresence = "chat_presence";
     public const string ChatSetting = "chat_setting";
     
@@ -17,10 +19,10 @@ public class EventTypes
     
     public const string Contact = "contact";
     
-    public const string UserPushName = "user_push_name";
-    public const string UserPicture = "user_picture";
+    public const string ChatPushName = "user_push_name";
+    public const string ChatPicture = "user_picture";
     public const string UserPresence = "user_presence";
-    public const string UserStatus = "user_status";
+    public const string ChatStatus = "user_status";
     
     public const string CallOffer = "call_offer";
     public const string CallAccept = "call_accept";

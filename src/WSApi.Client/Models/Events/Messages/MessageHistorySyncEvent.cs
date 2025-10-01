@@ -4,5 +4,6 @@ namespace WSApi.Client.Models.Events.Messages;
 
 public record MessageHistorySyncEvent : BaseEvent
 {
-    [JsonPropertyName("messages")] public MessageEvent[] Messages { get; init; } = null!;   
+    [JsonPropertyName("chatId")] public string ChatId { get; init; } = null!;
+    [JsonPropertyName("messages")] public MessageEvent[] Messages { get; init; } = null!;
 }
