@@ -13,6 +13,12 @@ public class InstanceClient(HttpClient httpClient) : IInstanceClient
         var response = await httpClient.GetAsync("/instance/settings", cancellationToken);
         return await response.EnsureSuccessOrThrowJsonAsync<InstanceSettings>();
     }
+    
+    public async Task<InstanceStatus> GetStatus(CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.GetAsync("/instance/status", cancellationToken);
+        return await response.EnsureSuccessOrThrowJsonAsync<InstanceStatus>();
+    }
 
     public async Task UpdateSettings(InstanceSettings settings, CancellationToken cancellationToken = default)
     {
@@ -38,6 +44,12 @@ public class InstanceClient(HttpClient httpClient) : IInstanceClient
         return await response.ReadAsApiResponseJsonAsync<InstanceSettings>();
     }
 
+    public async Task<ApiResponse<InstanceStatus>> TryGetStatus(CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.GetAsync("/instance/status", cancellationToken);
+        return await response.ReadAsApiResponseJsonAsync<InstanceStatus>();
+    }
+
     public async Task<ApiResponse> TryUpdateSettings(InstanceSettings settings, CancellationToken cancellationToken = default)
     {
         var response = await httpClient.PutAsJsonAsync("/instance/settings", settings, cancellationToken: cancellationToken);
@@ -60,11 +72,13 @@ public class InstanceClient(HttpClient httpClient) : IInstanceClient
 public interface IInstanceClient
 {
     Task<InstanceSettings> GetSettings(CancellationToken cancellationToken = default);
+    Task<InstanceStatus> GetStatus(CancellationToken cancellationToken = default);
     Task UpdateSettings(InstanceSettings settings, CancellationToken cancellationToken = default);
     Task Restart(CancellationToken cancellationToken = default);
     Task<string> UpdateApiKey(CancellationToken cancellationToken = default);
 
     Task<ApiResponse<InstanceSettings>> TryGetSettings(CancellationToken cancellationToken = default);
+    Task<ApiResponse<InstanceStatus>> TryGetStatus(CancellationToken cancellationToken = default);
     Task<ApiResponse> TryUpdateSettings(InstanceSettings settings, CancellationToken cancellationToken = default);
     Task<ApiResponse> TryRestart(CancellationToken cancellationToken = default);
     Task<ApiResponse<string>> TryUpdateApiKey(CancellationToken cancellationToken = default);
