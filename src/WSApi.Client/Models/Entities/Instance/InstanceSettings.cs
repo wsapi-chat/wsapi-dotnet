@@ -10,5 +10,6 @@ public record InstanceSettings
     [JsonPropertyName("webhookAuthHeader")] public string? WebhookAuthHeader { get; init; }
     [JsonPropertyName("webhookAuthValue")] public string? WebhookAuthValue { get; init; }
     [JsonPropertyName("pullMode")] public bool PullMode { get; init; }
-    
-}   
+    [JsonPropertyName("eventFilters")] public string[]? EventFilters { get; init; }
+
+}

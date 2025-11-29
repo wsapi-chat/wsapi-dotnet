@@ -27,6 +27,18 @@ public abstract record MessageRequestBase
     public string ReplyTo { get; init; } = null!;
 
     /// <summary>
+    /// Sender ID of the message being replied to. Required when replying in group chats.
+    /// </summary>
+    [JsonPropertyName("replyToSenderId")]
+    public string? ReplyToSenderId { get; init; }
+
+    /// <summary>
+    /// Ephemeral expiration time to override chat settings.
+    /// </summary>
+    [JsonPropertyName("ephemeralExpiration")]
+    public string? EphemeralExpiration { get; init; }
+
+    /// <summary>
     /// Indicates whether the message is a forwarded message.
     /// </summary>
     [JsonPropertyName("isForwarded")]
