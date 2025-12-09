@@ -6,6 +6,7 @@ using WSApi.Client.Models.Events;
 using WSApi.Client.Models.Events.Calls;
 using WSApi.Client.Models.Events.Chats;
 using WSApi.Client.Models.Events.Contacts;
+using WSApi.Client.Models.Events.Groups;
 using WSApi.Client.Models.Events.Messages;
 using WSApi.Client.Models.Events.Session;
 using WSApi.Client.Models.Events.Users;
@@ -31,6 +32,7 @@ namespace WSApi.Client
             [EventTypes.MessageRead] = typeof(MessageReadEvent),
             [EventTypes.MessageStar] = typeof(MessageStarEvent),
             [EventTypes.Contact] = typeof(ContactEvent),
+            [EventTypes.Group] = typeof(GroupEvent),
             [EventTypes.UserPresence] = typeof(UserPresenceEvent),
             [EventTypes.CallOffer] = typeof(CallOfferEvent),
             [EventTypes.CallAccept] = typeof(CallAcceptEvent),

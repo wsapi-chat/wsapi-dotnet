@@ -47,7 +47,7 @@ public class SSEClientService : BackgroundService
             {
                 case EventTypes.Message:
                     var messageEvent = (MessageEvent)evt;
-                    _logger.LogInformation("Message received: {Text} From: {From} at {ReceivedAt}", messageEvent.Text, messageEvent.SenderName, messageEvent.ReceivedAt);
+                    _logger.LogInformation("Message received: {Text} From: {From} at {ReceivedAt}", messageEvent.Text, messageEvent.Sender.User, messageEvent.ReceivedAt);
                     break;
 
                 // Add more event type handlers as needed

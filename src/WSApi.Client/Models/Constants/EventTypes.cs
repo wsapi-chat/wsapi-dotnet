@@ -19,10 +19,13 @@ public class EventTypes
     
     public const string Contact = "contact";
     
-    public const string ChatPushName = "user_push_name";
-    public const string ChatPicture = "user_picture";
+    public const string ChatPushName = "chat_push_name";
+    public const string ChatPicture = "chat_picture";
+    public const string ChatStatus = "chat_status";
+
     public const string UserPresence = "user_presence";
-    public const string ChatStatus = "user_status";
+
+    public const string Group = "group";
     
     public const string CallOffer = "call_offer";
     public const string CallAccept = "call_accept";

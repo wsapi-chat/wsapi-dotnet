@@ -23,7 +23,7 @@ public class WebhookController(ILogger<WebhookController> logger) : ControllerBa
                 var messageEvent = (MessageEvent)evt;
                 logger.LogInformation("Message received: {Text} From: {From} at {ReceivedAt}", messageEvent.Text, messageEvent.Sender.User, messageEvent.ReceivedAt);
                 break;
-            
+
             // Handle other event types as needed
         }
         
