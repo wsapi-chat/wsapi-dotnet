@@ -15,8 +15,8 @@ public record MessageSendImageRequest : MessageRequestBase
     /// <summary>
     ///  URL of the image to be sent. (this is an alternative to ImageBase64)
     /// </summary>     
-    [JsonPropertyName("imageUrl")]
-    public string ImageUrl { get; init; } = null!;
+    [JsonPropertyName("imageURL")]
+    public string? ImageURL { get; init; }
 
     /// <summary>
     ///  MIME type of the image, e.g., "image/jpeg", "image/png".

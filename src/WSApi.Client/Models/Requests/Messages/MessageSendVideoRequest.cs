@@ -14,8 +14,8 @@ public record MessageSendVideoRequest : MessageRequestBase
     /// <summary>
     ///  URL of the video file to be sent. (this is an alternative to VideoBase64)
     ///  /// </summary>
-    [JsonPropertyName("videoUrl")]
-    public string? VideoUrl { get; init; }
+    [JsonPropertyName("videoURL")]
+    public string? VideoURL { get; init; }
 
     /// <summary>
     ///  MIME type of the video file, e.g., "video/mp4", "video/avi".

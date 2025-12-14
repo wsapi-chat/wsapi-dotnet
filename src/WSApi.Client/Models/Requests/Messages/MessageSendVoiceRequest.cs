@@ -14,8 +14,8 @@ public record MessageSendVoiceRequest : MessageRequestBase
     /// <summary>
     ///  URL of the voice file to be sent. It should be OGG format (this is an alternative to AudioBase64)
     ///  </summary>
-    [JsonPropertyName("voiceUrl")]
-    public string VoiceUrl { get; init; } = null!;
+    [JsonPropertyName("voiceURL")]
+    public string? VoiceURL { get; init; }
 
     /// <summary>
     ///  Indicates whether the image should be sent as a view once message.

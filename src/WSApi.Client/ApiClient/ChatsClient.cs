@@ -88,7 +88,7 @@ public class ChatsClient(HttpClient httpClient) : IChatsClient
 
     public async Task ClearChatAsync(string chatId, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PostAsync($"/chats/{chatId}/clear", null, cancellationToken);
+        var response = await httpClient.PutAsync($"/chats/{chatId}/clear", null, cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
@@ -177,7 +177,7 @@ public class ChatsClient(HttpClient httpClient) : IChatsClient
 
     public async Task<ApiResponse> TryClearChatAsync(string chatId, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PostAsync($"/chats/{chatId}/clear", null, cancellationToken);
+        var response = await httpClient.PutAsync($"/chats/{chatId}/clear", null, cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 

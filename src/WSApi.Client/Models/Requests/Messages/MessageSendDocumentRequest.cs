@@ -13,8 +13,8 @@ public record MessageSendDocumentRequest : MessageRequestBase
     /// <summary>
     ///  The URL of the document to send. (this is an alternative to DocumentBase64)
     ///  </summary>
-    [JsonPropertyName("documentUrl")]
-    public string DocumentUrl { get; init; } = null!;
+    [JsonPropertyName("documentURL")]
+    public string? DocumentURL { get; init; }
 
     /// <summary>
     /// The name of the file being sent.

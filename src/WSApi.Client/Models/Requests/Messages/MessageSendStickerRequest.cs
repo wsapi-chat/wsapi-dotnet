@@ -13,8 +13,14 @@ public record MessageSendStickerRequest : MessageRequestBase
     /// <summary>
     ///  The URL of the document to send. (this is an alternative to DocumentBase64). The file should be in a WebP supported sticker format.
     ///  </summary>
-    [JsonPropertyName("stickerUrl")]
-    public string StickerUrl { get; init; } = null!;
+    [JsonPropertyName("stickerURL")]
+    public string? StickerURL { get; init; }
+
+    /// <summary>
+    ///  MIME type of the sticker, e.g., "image/webp".
+    ///  </summary>
+    [JsonPropertyName("mimeType")]
+    public string MimeType { get; init; } = null!;
 
     /// <summary>
     ///  Whether the sticker is animated or not.

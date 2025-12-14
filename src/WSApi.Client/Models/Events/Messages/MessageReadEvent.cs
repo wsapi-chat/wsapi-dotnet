@@ -10,8 +10,7 @@ public record MessageReadEvent : BaseEvent
     [JsonPropertyName("sender")] public Sender Sender { get; init; } = null!;
     [JsonPropertyName("time")] public DateTime Time { get; init; }
     [JsonPropertyName("isGroup")] public bool IsGroup { get; init; }
-    [JsonPropertyName("isFromMe")] public bool IsFromMe { get; init; }
-    [JsonPropertyName("messageSender")] public Sender MessageSender { get; init; } = null!;
+    [JsonPropertyName("messageSender")] public Sender? MessageSender { get; init; }
     [JsonPropertyName("receiptType")] public string ReceiptType { get; init; } = null!;
-    [JsonPropertyName("messageIds")] public string[] MessageIds { get; init; } = [];
+    [JsonPropertyName("messageIds")] public string[]? MessageIds { get; init; }
 }

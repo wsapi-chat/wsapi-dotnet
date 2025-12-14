@@ -13,8 +13,8 @@ public record MessageSendAudioRequest : MessageRequestBase
     /// <summary>
     ///  URL of the audio file to be sent. (this is an alternative to AudioBase64)
     /// </summary>
-    [JsonPropertyName("audioUrl")]
-    public string AudioUrl { get; init; } = null!;
+    [JsonPropertyName("audioURL")]
+    public string? AudioURL { get; init; }
 
     /// <summary>
     ///  MIME type of the audio file, e.g., "audio/mpeg", "audio/ogg".

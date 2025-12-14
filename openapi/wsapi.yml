@@ -5,7 +5,7 @@ info:
   version: 1.0.0
   license:
     name: Proprietary
-    url: https://wsapi.chat/terms
+    url: https://wsapi.chat/terms-of-service
 servers:
   - url: https://api.wsapi.chat
     description: API v1
@@ -500,9 +500,9 @@ paths:
             schema:
               type: object
               required:
-                - ephemeralExpiration
+                - expiration
               properties:
-                ephemeralExpiration:
+                expiration:
                   type: string
                   description: Message expiration time
                   enum:
@@ -549,7 +549,12 @@ paths:
                   type:
                     - string
                     - 'null'
-                  description: Duration preset for muting the chat (for example '8h', '1w', 'always'); omit or set to null to unmute
+                  description: Duration preset for muting the chat; omit or set to null to unmute
+                  enum:
+                    - 8h
+                    - 1w
+                    - always
+                    - null
       responses:
         '204':
           description: Chat muted successfully
@@ -686,7 +691,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /chats/{chatId}/clear:
-    post:
+    put:
       operationId: clearChat
       tags:
         - Chats
@@ -2549,7 +2554,7 @@ paths:
               senderId: 1234567890@s.whatsapp.net
               receiptType: read
       responses:
-        '200':
+        '204':
           description: Message marked as read successfully
         '400':
           description: Bad request
@@ -2586,7 +2591,7 @@ paths:
               chatId: 1234567890@s.whatsapp.net
               senderId: 1234567890@s.whatsapp.net
       responses:
-        '200':
+        '204':
           description: Message starred successfully
         '400':
           description: Bad request
@@ -2623,7 +2628,7 @@ paths:
               chatId: 1234567890@s.whatsapp.net
               senderId: 1234567890@s.whatsapp.net
       responses:
-        '200':
+        '204':
           description: Message deleted successfully
         '400':
           description: Bad request
@@ -2659,10 +2664,10 @@ paths:
             example:
               chatId: 1234567890@s.whatsapp.net
               senderId: 1234567890@s.whatsapp.net
-              ifFromMe: true
+              isFromMe: true
               Time: '2025-05-19T00:51:44.816Z'
       responses:
-        '200':
+        '204':
           description: Message deleted for me successfully
         '400':
           description: Bad request
@@ -2951,11 +2956,11 @@ components:
               - message_history_sync
               - chat_setting
               - chat_presence
+              - chat_push_name
+              - chat_status
+              - chat_picture
               - contact
               - group
-              - user_push_name
-              - user_status
-              - user_picture
               - user_presence
               - call_offer
               - call_terminate
@@ -2963,6 +2968,7 @@ components:
               - logged_error
               - logged_out
               - logged_in
+              - initial_sync_finished
     InstanceSettingsRequest:
       type: object
       properties:
@@ -2999,11 +3005,11 @@ components:
               - message_history_sync
               - chat_setting
               - chat_presence
+              - chat_push_name
+              - chat_status
+              - chat_picture
               - contact
               - group
-              - user_push_name
-              - user_status
-              - user_picture
               - user_presence
               - call_offer
               - call_terminate
@@ -3011,6 +3017,7 @@ components:
               - logged_error
               - logged_out
               - logged_in
+              - initial_sync_finished
     SendTextRequest:
       type: object
       required:
@@ -3351,6 +3358,7 @@ components:
       type: object
       required:
         - to
+        - vCard
       properties:
         to:
           type: string
@@ -3451,9 +3459,9 @@ components:
     RejectCallRequest:
       type: object
       required:
-        - callerId
+        - caller
       properties:
-        callerId:
+        caller:
           type: string
           description: JID of the call creator
     DeleteMessageRequest:
@@ -3473,8 +3481,8 @@ components:
       required:
         - chatId
         - senderId
-        - ifFromMe
-        - Time
+        - isFromMe
+        - timestamp
       properties:
         chatId:
           type: string
@@ -3482,10 +3490,10 @@ components:
         senderId:
           type: string
           description: ID of the message sender
-        ifFromMe:
+        isFromMe:
           type: boolean
           description: If the message to delete is from the sender
-        Time:
+        timestamp:
           type: string
           format: date-time
           description: Time when the message was sent (could be aproximate, but is required)

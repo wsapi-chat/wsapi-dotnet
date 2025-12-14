@@ -14,7 +14,7 @@ public record MessageSendReactionRequest
     ///  If the recepient is a group, this is the ID of the sender of the message to which the reaction is being sent. If the recipient is a user, this could be null
     /// </summary>
     [JsonPropertyName("senderId")]
-    public string? SenderId { get; init; }
+    public string SenderId { get; init; } = null!;
 
     /// <summary>
     ///  The emoji reaction to be sent. This should be a valid emoji string.

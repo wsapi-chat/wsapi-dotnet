@@ -6,7 +6,7 @@ namespace WSApi.Client.Models.Events.Chats;
 public record ChatSettingEvent: BaseEvent
 {
     [JsonPropertyName("id")] public string Id { get; init; } = null!;
-    [JsonPropertyName("settingType")] public string SetttingType { get; init; } = null!;
+    [JsonPropertyName("settingType")] public string SettingType { get; init; } = null!;
     [JsonPropertyName("archive")] public ChatArchive? Archive { get; init; }
     [JsonPropertyName("pin")] public ChatPin? Pin { get; init; }
     [JsonPropertyName("read")] public ChatRead? Read { get; init; }
