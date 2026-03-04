@@ -400,28 +400,34 @@ The SDK supports the following event types that you can handle in your applicati
 **Session Events:**
 - `SessionLoggedInEvent` - When the WhatsApp session is established
 - `SessionLoggedOutEvent` - When the session is terminated
-- `SessionLoggedErrorEvent` - When there's an authentication error
-- `SessionInitialSyncFinishedEvent` - When the initial synchronization has finished
+- `SessionLoginErrorEvent` - When there's a pairing/authentication error
+- `SessionInitialSyncFinished` - When the initial history synchronization has completed
 
 **Message Events:**
 - `MessageEvent` - New incoming/outgoing messages
 - `MessageDeleteEvent` - When messages are deleted
-- `MessageReadEvent` - When messages are read
-- `MessageStarEvent` - When messages are starred
+- `MessageReadEvent` - When messages are read/delivered
+- `MessageStarEvent` - When messages are starred/unstarred
 - `MessageHistorySyncEvent` - Message history synchronization
 
 **Chat Events:**
-- `ChatPresenceEvent` - User typing indicators, online status
-- `ChatSettingEvent` - Chat settings changes
-- `ChatPushNameEvent` - Chat display name changes
+- `ChatPresenceEvent` - User typing indicators (typing, recording, paused)
+- `ChatSettingEvent` - Chat settings changes (mute, pin, read, archive, ephemeral)
+- `ChatPushNameEvent` - Chat push name updates
 - `ChatPictureEvent` - Chat picture updates
-- `ChatPresenceEvent` - Chat Online/offline status changes
+- `ChatStatusEvent` - Chat about/status text updates
 
 **Contact Events:**
 - `ContactEvent` - Contact information updates
 
+**Group Events:**
+- `GroupEvent` - Group and community updates (name/topic changes, members join/leave, admin promote/demote, community linking)
+
+**Newsletter Events:**
+- `NewsletterEvent` - Newsletter subscription and mute changes
+
 **User Events:**
-- `UserStatusEvent` - Status message updates
+- `UserPresenceEvent` - User online/offline status and last seen
 
 **Call Events:**
 - `CallOfferEvent` - Incoming call offers
