@@ -193,6 +193,7 @@ public class SSEClient : ISSEClient, IDisposable
 
         _disposed = true;
         _connectionSemaphore.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
 

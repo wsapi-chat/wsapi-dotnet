@@ -7,19 +7,18 @@ public record MessageSendVideoRequest : MessageRequestBase
     /// <summary>
     ///  Base64 encoded video data. It should be in a supported video format.
     /// </summary>
-    [JsonPropertyName("videoBase64")]
-    public string? VideoBase64 { get; init; }
-
+    [JsonPropertyName("data")]
+    public string? Data { get; init; }
 
     /// <summary>
-    ///  URL of the video file to be sent. (this is an alternative to VideoBase64)
-    ///  /// </summary>
-    [JsonPropertyName("videoURL")]
-    public string? VideoURL { get; init; }
+    ///  URL of the video file to be sent. (this is an alternative to Data)
+    /// </summary>
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
 
     /// <summary>
     ///  MIME type of the video file, e.g., "video/mp4", "video/avi".
-    ///      </summary>
+    /// </summary>
     [JsonPropertyName("mimeType")]
     public string MimeType { get; init; } = null!;
 

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSApi.Client", "WSAPI.Client\WSApi.Client.csproj", "{7F065F3E-CBD3-4EAF-BD96-A2861CB6EEC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSApi.Client", "WSApi.Client\WSApi.Client.csproj", "{7F065F3E-CBD3-4EAF-BD96-A2861CB6EEC1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WSAPI.Client.Examples.Webhook", "WSAPI.Client.Examples.Webhook\WSAPI.Client.Examples.Webhook.csproj", "{76D7110C-95A9-4A51-A6B1-E755DE55EA53}"
 EndProject

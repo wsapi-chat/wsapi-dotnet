@@ -4,7 +4,6 @@ namespace WSApi.Client.ApiClient;
 
 public class WSApiClient(HttpClient httpClient) : IWSApiClient
 {
-    public IInstanceClient Instance { get; } = new InstanceClient(httpClient);
     public IAccountClient Account { get; } = new AccountClient(httpClient);
     public IChatsClient Chats { get; } = new ChatsClient(httpClient);
     public IContactsClient Contacts { get; } = new ContactsClient(httpClient);
@@ -14,11 +13,13 @@ public class WSApiClient(HttpClient httpClient) : IWSApiClient
     public IUsersClient Users { get; } = new UsersClient(httpClient);
     public ISessionClient Session { get; } = new SessionClient(httpClient);
     public ICallsClient Calls { get; } = new CallsClient(httpClient);
+    public ICommunitiesClient Communities { get; } = new CommunitiesClient(httpClient);
+    public INewslettersClient Newsletters { get; } = new NewslettersClient(httpClient);
+    public IStatusClient Status { get; } = new StatusClient(httpClient);
 }
 
 public interface IWSApiClient
 {
-    IInstanceClient Instance { get; }
     IAccountClient Account { get; }
     IChatsClient Chats { get; }
     IContactsClient Contacts { get; }
@@ -28,4 +29,7 @@ public interface IWSApiClient
     IUsersClient Users { get; }
     ISessionClient Session { get; }
     ICallsClient Calls { get; }
+    ICommunitiesClient Communities { get; }
+    INewslettersClient Newsletters { get; }
+    IStatusClient Status { get; }
 }

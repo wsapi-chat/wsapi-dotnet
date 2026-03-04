@@ -28,7 +28,8 @@ public record MessageEvent : BaseEvent
     [JsonPropertyName("contact")] public string? Contact { get; init; }
     [JsonPropertyName("contactArray")] public string[]? Contacts { get; init; }
     [JsonPropertyName("pin")] public MessagePin? Pin { get; init; }
-
+    [JsonPropertyName("isForwarded")] public bool IsForwarded { get; init; }
+    [JsonPropertyName("viewOnce")] public bool ViewOnce { get; init; }
 
     public bool HasMedia => Media != null;
     public bool HasReaction => Reaction != null;

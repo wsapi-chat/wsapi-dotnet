@@ -3,7 +3,7 @@
 public class EventTypes
 {
     public const string LoggedIn = "logged_in";
-    public const string LoggedError = "logged_error";
+    public const string LoginError = "login_error";
     public const string LoggedOut = "logged_out";
     
     public const string InitialSyncFinished ="initial_sync_finished";
@@ -30,4 +30,6 @@ public class EventTypes
     public const string CallOffer = "call_offer";
     public const string CallAccept = "call_accept";
     public const string CallTerminate = "call_terminate";
+
+    public const string Newsletter = "newsletter";
 }

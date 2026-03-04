@@ -7,19 +7,19 @@ public record MessageSendDocumentRequest : MessageRequestBase
     /// <summary>
     ///  The document to send, encoded in base64.
     /// </summary>
-    [JsonPropertyName("documentBase64")]
-    public string DocumentBase64 { get; init; } = null!;
+    [JsonPropertyName("data")]
+    public string Data { get; init; } = null!;
 
     /// <summary>
-    ///  The URL of the document to send. (this is an alternative to DocumentBase64)
+    ///  The URL of the document to send. (this is an alternative to Data)
     ///  </summary>
-    [JsonPropertyName("documentURL")]
-    public string? DocumentURL { get; init; }
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
 
     /// <summary>
     /// The name of the file being sent.
     /// </summary>
-    [JsonPropertyName("fileName")]
+    [JsonPropertyName("filename")]
     public string FileName { get; init; } = null!;
 
     /// <summary>

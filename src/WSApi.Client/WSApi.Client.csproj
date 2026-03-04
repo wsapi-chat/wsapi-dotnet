@@ -6,7 +6,7 @@
         
         <!-- Package Information -->
         <PackageId>WSApi.Client</PackageId>
-        <Version>1.0.18</Version>
+        <Version>2.0.0</Version>
         <Authors>WSApi</Authors>
         <Company>WSApi</Company>
         <Description>A .NET SDK for integrating with the WSApi API, enabling developers to send WhatsApp messages, manage groups and chats, and receive real-time events via Webhooks or Server-Sent Events (SSE).</Description>
@@ -48,7 +48,7 @@
         <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.*" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
+        <None Include="../../README.md" Pack="true" PackagePath="\" />
         <None Include="wsapi-logo.png" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>

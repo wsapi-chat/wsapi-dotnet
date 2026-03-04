@@ -7,20 +7,14 @@ public record MessageSendStickerRequest : MessageRequestBase
     /// <summary>
     ///  The sticker to send, encoded in base64. The file should be in a WebP supported sticker format.
     /// </summary>
-    [JsonPropertyName("stickerBase64")]
-    public string StickerBase64 { get; init; } = null!;
+    [JsonPropertyName("data")]
+    public string Data { get; init; } = null!;
 
     /// <summary>
-    ///  The URL of the document to send. (this is an alternative to DocumentBase64). The file should be in a WebP supported sticker format.
+    ///  The URL of the sticker to send. (this is an alternative to Data). The file should be in a WebP supported sticker format.
     ///  </summary>
-    [JsonPropertyName("stickerURL")]
-    public string? StickerURL { get; init; }
-
-    /// <summary>
-    ///  MIME type of the sticker, e.g., "image/webp".
-    ///  </summary>
-    [JsonPropertyName("mimeType")]
-    public string MimeType { get; init; } = null!;
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
 
     /// <summary>
     ///  Whether the sticker is animated or not.

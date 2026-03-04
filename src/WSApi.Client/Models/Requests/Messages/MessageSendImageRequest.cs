@@ -4,19 +4,17 @@ namespace WSApi.Client.Models.Requests.Messages;
 
 public record MessageSendImageRequest : MessageRequestBase
 {
-    //add comments to each field to explain their purpose
-
     /// <summary>
-    ///  Base64 encoded image data. 
+    ///  Base64 encoded image data.
     /// </summary>
-    [JsonPropertyName("imageBase64")]
-    public string ImageBase64 { get; init; } = null!;
+    [JsonPropertyName("data")]
+    public string Data { get; init; } = null!;
 
     /// <summary>
-    ///  URL of the image to be sent. (this is an alternative to ImageBase64)
-    /// </summary>     
-    [JsonPropertyName("imageURL")]
-    public string? ImageURL { get; init; }
+    ///  URL of the image to be sent. (this is an alternative to Data)
+    /// </summary>
+    [JsonPropertyName("url")]
+    public string? Url { get; init; }
 
     /// <summary>
     ///  MIME type of the image, e.g., "image/jpeg", "image/png".

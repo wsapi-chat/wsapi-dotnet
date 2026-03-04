@@ -4,7 +4,7 @@ namespace WSApi.Client.Models.Requests.Messages;
 
 public record MessageSendContactRequest : MessageRequestBase
 {
-    [JsonPropertyName("vCard")]
+    [JsonPropertyName("vcard")]
     public string VCard { get; init; } = null!;
 
     [JsonPropertyName("displayName")]

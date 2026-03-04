@@ -4,5 +4,5 @@ namespace WSApi.Client.Models.Requests.Calls;
 
 public class RejectCallRequest
 {
-    [JsonPropertyName("caller")] public string Caller { get; set; } = null!;
+    [JsonPropertyName("callerId")] public string CallerId { get; set; } = null!;
 }

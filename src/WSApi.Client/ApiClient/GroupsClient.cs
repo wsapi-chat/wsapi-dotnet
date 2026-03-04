@@ -47,38 +47,49 @@ public class GroupsClient(HttpClient httpClient) : IGroupsClient
 
     public async Task LeaveGroupAsync(string groupId, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsync($"/groups/{groupId}/leave", null, cancellationToken);
+        var response = await httpClient.PostAsync($"/groups/{groupId}/leave", null, cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
-    public async Task<GroupInviteLink> GetInviteLinkAsync(string groupId, bool reset = false, CancellationToken cancellationToken = default)
+    public async Task<GroupInviteLink> GetInviteLinkAsync(string groupId, CancellationToken cancellationToken = default)
     {
-        var url = reset ? $"/groups/{groupId}/invite-link?reset=1" : $"/groups/{groupId}/invite-link";
-        var response = await httpClient.GetAsync(url, cancellationToken);
+        var response = await httpClient.GetAsync($"/groups/{groupId}/invite-link", cancellationToken);
         return await response.EnsureSuccessOrThrowJsonAsync<GroupInviteLink>();
+    }
+
+    public async Task<GroupInviteLink> ResetInviteLinkAsync(string groupId, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.PostAsync($"/groups/{groupId}/invite-link/reset", null, cancellationToken);
+        return await response.EnsureSuccessOrThrowJsonAsync<GroupInviteLink>();
+    }
+
+    public async Task<GroupParticipantInfo[]> GetParticipantsAsync(string groupId, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.GetAsync($"/groups/{groupId}/participants", cancellationToken);
+        return await response.EnsureSuccessOrThrowJsonAsync<GroupParticipantInfo[]>();
     }
 
     public async Task SetAnnounceAsync(string groupId, GroupAnnounceRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/announce", request, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/settings/announce", request, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
     public async Task SetLockedAsync(string groupId, GroupLockedRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/locked", request, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/settings/locked", request, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
     public async Task SetJoinApprovalAsync(string groupId, GroupJoinApprovalRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/join-approval", request, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/settings/join-approval", request, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
     public async Task SetMemberAddModeAsync(string groupId, GroupMemberAddModeRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/member-add-mode", request, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/settings/member-add-mode", request, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
@@ -158,38 +169,49 @@ public class GroupsClient(HttpClient httpClient) : IGroupsClient
 
     public async Task<ApiResponse> TryLeaveGroupAsync(string groupId, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsync($"/groups/{groupId}/leave", null, cancellationToken);
+        var response = await httpClient.PostAsync($"/groups/{groupId}/leave", null, cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 
-    public async Task<ApiResponse<GroupInviteLink>> TryGetInviteLinkAsync(string groupId, bool reset = false, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<GroupInviteLink>> TryGetInviteLinkAsync(string groupId, CancellationToken cancellationToken = default)
     {
-        var url = reset ? $"/groups/{groupId}/invite-link?reset=1" : $"/groups/{groupId}/invite-link";
-        var response = await httpClient.GetAsync(url, cancellationToken);
+        var response = await httpClient.GetAsync($"/groups/{groupId}/invite-link", cancellationToken);
         return await response.ReadAsApiResponseJsonAsync<GroupInviteLink>();
+    }
+
+    public async Task<ApiResponse<GroupInviteLink>> TryResetInviteLinkAsync(string groupId, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.PostAsync($"/groups/{groupId}/invite-link/reset", null, cancellationToken);
+        return await response.ReadAsApiResponseJsonAsync<GroupInviteLink>();
+    }
+
+    public async Task<ApiResponse<GroupParticipantInfo[]>> TryGetParticipantsAsync(string groupId, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.GetAsync($"/groups/{groupId}/participants", cancellationToken);
+        return await response.ReadAsApiResponseJsonAsync<GroupParticipantInfo[]>();
     }
 
     public async Task<ApiResponse> TrySetAnnounceAsync(string groupId, GroupAnnounceRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/announce", request, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/settings/announce", request, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 
     public async Task<ApiResponse> TrySetLockedAsync(string groupId, GroupLockedRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/locked", request, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/settings/locked", request, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 
     public async Task<ApiResponse> TrySetJoinApprovalAsync(string groupId, GroupJoinApprovalRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/join-approval", request, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/settings/join-approval", request, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 
     public async Task<ApiResponse> TrySetMemberAddModeAsync(string groupId, GroupMemberAddModeRequest request, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/member-add-mode", request, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/groups/{groupId}/settings/member-add-mode", request, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 
@@ -239,7 +261,9 @@ public interface IGroupsClient
     Task UpdateNameAsync(string groupId, GroupUpdateNameRequest groupUpdateNameRequest, CancellationToken cancellationToken = default);
     Task<GroupPictureUpdated> UpdatePictureAsync(string groupId, GroupUpdatePictureRequest groupUpdatePictureRequest, CancellationToken cancellationToken = default);
     Task LeaveGroupAsync(string groupId, CancellationToken cancellationToken = default);
-    Task<GroupInviteLink> GetInviteLinkAsync(string groupId, bool reset = false, CancellationToken cancellationToken = default);
+    Task<GroupInviteLink> GetInviteLinkAsync(string groupId, CancellationToken cancellationToken = default);
+    Task<GroupInviteLink> ResetInviteLinkAsync(string groupId, CancellationToken cancellationToken = default);
+    Task<GroupParticipantInfo[]> GetParticipantsAsync(string groupId, CancellationToken cancellationToken = default);
     Task SetAnnounceAsync(string groupId, GroupAnnounceRequest request, CancellationToken cancellationToken = default);
     Task SetLockedAsync(string groupId, GroupLockedRequest request, CancellationToken cancellationToken = default);
     Task SetJoinApprovalAsync(string groupId, GroupJoinApprovalRequest request, CancellationToken cancellationToken = default);
@@ -258,7 +282,9 @@ public interface IGroupsClient
     Task<ApiResponse> TryUpdateNameAsync(string groupId, GroupUpdateNameRequest groupUpdateNameRequest, CancellationToken cancellationToken = default);
     Task<ApiResponse<GroupPictureUpdated>> TryUpdatePictureAsync(string groupId, GroupUpdatePictureRequest groupUpdatePictureRequest, CancellationToken cancellationToken = default);
     Task<ApiResponse> TryLeaveGroupAsync(string groupId, CancellationToken cancellationToken = default);
-    Task<ApiResponse<GroupInviteLink>> TryGetInviteLinkAsync(string groupId, bool reset = false, CancellationToken cancellationToken = default);
+    Task<ApiResponse<GroupInviteLink>> TryGetInviteLinkAsync(string groupId, CancellationToken cancellationToken = default);
+    Task<ApiResponse<GroupInviteLink>> TryResetInviteLinkAsync(string groupId, CancellationToken cancellationToken = default);
+    Task<ApiResponse<GroupParticipantInfo[]>> TryGetParticipantsAsync(string groupId, CancellationToken cancellationToken = default);
     Task<ApiResponse> TrySetAnnounceAsync(string groupId, GroupAnnounceRequest request, CancellationToken cancellationToken = default);
     Task<ApiResponse> TrySetLockedAsync(string groupId, GroupLockedRequest request, CancellationToken cancellationToken = default);
     Task<ApiResponse> TrySetJoinApprovalAsync(string groupId, GroupJoinApprovalRequest request, CancellationToken cancellationToken = default);

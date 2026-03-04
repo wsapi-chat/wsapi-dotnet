@@ -2,7 +2,6 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using WSApi.Client.Models.Entities.Contacts;
 using WSApi.Client.Models.Entities.Messages;
 using WSApi.Client.Models.Requests.Messages;
 
@@ -67,29 +66,35 @@ public class MessagesClient(HttpClient httpClient) : IMessagesClient
     }
     public async Task<MessageCreated> SendEditTextAsync(string MessageId, MessageSendTextRequest messageSendTextRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/text", messageSendTextRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/edit", messageSendTextRequest, cancellationToken: cancellationToken);
         return await response.EnsureSuccessOrThrowJsonAsync<MessageCreated>();
     }
-    
+
     public async Task MarkAsReadAsync(string MessageId, MessageMarkAsReadRequest messageMarkAsReadRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/read", messageMarkAsReadRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/read", messageMarkAsReadRequest, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
     public async Task StarAsync(string MessageId, MessageStarRequest messageStarRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/star", messageStarRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/star", messageStarRequest, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
     public async Task DeleteAsync(string MessageId, MessageDeleteRequest messageDeleteRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/delete", messageDeleteRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/delete", messageDeleteRequest, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
     public async Task DeleteForMeAsync(string MessageId, MessageDeleteForMeRequest messageDeleteForMeRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/delete/forme", messageDeleteForMeRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/delete-for-me", messageDeleteForMeRequest, cancellationToken: cancellationToken);
+        await response.EnsureSuccessOrThrowAsync();
+    }
+
+    public async Task PinAsync(string MessageId, MessagePinRequest messagePinRequest, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/pin", messagePinRequest, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
@@ -150,27 +155,32 @@ public class MessagesClient(HttpClient httpClient) : IMessagesClient
     }
     public async Task<ApiResponse<MessageCreated>> TrySendEditTextAsync(string messageId, MessageSendTextRequest messageSendTextRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{messageId}/text", messageSendTextRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{messageId}/edit", messageSendTextRequest, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseJsonAsync<MessageCreated>();
     }
     public async Task<ApiResponse> TryMarkAsReadAsync(string MessageId, MessageMarkAsReadRequest messageMarkAsReadRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/read", messageMarkAsReadRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/read", messageMarkAsReadRequest, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
     public async Task<ApiResponse> TryStarAsync(string MessageId, MessageStarRequest messageStarRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/star", messageStarRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/star", messageStarRequest, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
     public async Task<ApiResponse> TryDeleteAsync(string MessageId, MessageDeleteRequest messageDeleteRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/delete", messageDeleteRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/delete", messageDeleteRequest, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
     public async Task<ApiResponse> TryDeleteForMeAsync(string MessageId, MessageDeleteForMeRequest messageDeleteForMeRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"messages/{MessageId}/delete/forme", messageDeleteForMeRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/delete-for-me", messageDeleteForMeRequest, cancellationToken: cancellationToken);
+        return await response.ReadAsApiResponseAsync();
+    }
+    public async Task<ApiResponse> TryPinAsync(string MessageId, MessagePinRequest messagePinRequest, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.PostAsJsonAsync($"messages/{MessageId}/pin", messagePinRequest, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 }
@@ -193,7 +203,7 @@ public interface IMessagesClient
     public Task StarAsync(string MessageId, MessageStarRequest messageStarRequest, CancellationToken cancellationToken = default);
     public Task DeleteAsync(string MessageId, MessageDeleteRequest messageDeleteRequest, CancellationToken cancellationToken = default);
     public Task DeleteForMeAsync(string MessageId, MessageDeleteForMeRequest messageDeleteForMeRequest, CancellationToken cancellationToken = default);
-
+    public Task PinAsync(string MessageId, MessagePinRequest messagePinRequest, CancellationToken cancellationToken = default);
 
     public Task<ApiResponse<MessageCreated>> TrySendTextAsync(MessageSendTextRequest messageSendTextRequest, CancellationToken cancellationToken = default);
     public Task<ApiResponse<MessageCreated>> TrySendLinkAsync(MessageSendLinkRequest messageSendLinkRequest, CancellationToken cancellationToken = default);
@@ -211,4 +221,5 @@ public interface IMessagesClient
     public Task<ApiResponse> TryStarAsync(string MessageId, MessageStarRequest messageStarRequest, CancellationToken cancellationToken = default);
     public Task<ApiResponse> TryDeleteAsync(string MessageId, MessageDeleteRequest messageDeleteRequest, CancellationToken cancellationToken = default);
     public Task<ApiResponse> TryDeleteForMeAsync(string MessageId, MessageDeleteForMeRequest messageDeleteForMeRequest, CancellationToken cancellationToken = default);
+    public Task<ApiResponse> TryPinAsync(string MessageId, MessagePinRequest messagePinRequest, CancellationToken cancellationToken = default);
 }

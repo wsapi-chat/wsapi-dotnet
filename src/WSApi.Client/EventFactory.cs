@@ -8,6 +8,7 @@ using WSApi.Client.Models.Events.Chats;
 using WSApi.Client.Models.Events.Contacts;
 using WSApi.Client.Models.Events.Groups;
 using WSApi.Client.Models.Events.Messages;
+using WSApi.Client.Models.Events.Newsletters;
 using WSApi.Client.Models.Events.Session;
 using WSApi.Client.Models.Events.Users;
 
@@ -19,7 +20,7 @@ namespace WSApi.Client
         {
             [EventTypes.LoggedIn] = typeof(SessionLoggedInEvent),
             [EventTypes.LoggedOut] = typeof(SessionLoggedOutEvent),
-            [EventTypes.LoggedError] = typeof(SessionLoggedErrorEvent),
+            [EventTypes.LoginError] = typeof(SessionLoginErrorEvent),
             [EventTypes.InitialSyncFinished] = typeof(SessionInitialSyncFinished),
             [EventTypes.ChatPresence] = typeof(ChatPresenceEvent),
             [EventTypes.ChatSetting] = typeof(ChatSettingEvent),
@@ -37,6 +38,7 @@ namespace WSApi.Client
             [EventTypes.CallOffer] = typeof(CallOfferEvent),
             [EventTypes.CallAccept] = typeof(CallAcceptEvent),
             [EventTypes.CallTerminate] = typeof(CallTerminateEvent),
+            [EventTypes.Newsletter] = typeof(NewsletterEvent),
         };
 
         public static BaseEvent ParseEvent(string json)
@@ -48,6 +50,9 @@ namespace WSApi.Client
             {
                 using var document = JsonDocument.Parse(json);
                 var rootElement = document.RootElement;
+
+                if (!rootElement.TryGetProperty("eventId", out var jsonEventId))
+                    throw new ArgumentException("Missing required property: eventId");
 
                 if (!rootElement.TryGetProperty("receivedAt", out var jsonReceivedAtProp))
                     throw new ArgumentException("Missing required property: receivedAt");
@@ -61,6 +66,7 @@ namespace WSApi.Client
                 if (!rootElement.TryGetProperty("eventData", out var jsonEventData))
                     throw new ArgumentException("Missing required property: eventData");
 
+                var eventId = jsonEventId.GetString() ?? throw new ArgumentException("EventId property is null or empty");
                 var receivedAt = jsonReceivedAtProp.GetDateTime();
                 var instanceId = jsonInstanceId.GetString() ?? throw new ArgumentException("InstanceId property is null or empty");
                 var eventType = jsonEventType.GetString() ?? throw new ArgumentException("EventType property is null or empty");
@@ -70,6 +76,7 @@ namespace WSApi.Client
 
                 var evt = jsonEventData.Deserialize(targetType) ?? throw new JsonException($"Failed to deserialize {eventType}");
                 var baseEvent = (BaseEvent) evt;
+                baseEvent.EventId = eventId;
                 baseEvent.InstanceId = instanceId!;
                 baseEvent.ReceivedAt = receivedAt;
                 baseEvent.EventType = eventType;

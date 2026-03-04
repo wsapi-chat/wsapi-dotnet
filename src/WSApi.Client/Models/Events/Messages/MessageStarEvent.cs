@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 using WSApi.Client.Models.Entities.Users;
 
 namespace WSApi.Client.Models.Events.Messages;
 
-public class MessageStarEvent
+public record MessageStarEvent : BaseEvent
 {
     [JsonPropertyName("id")] public string Id { get; init; } = null!;
     [JsonPropertyName("chatId")] public string ChatId { get; init; } = null!;

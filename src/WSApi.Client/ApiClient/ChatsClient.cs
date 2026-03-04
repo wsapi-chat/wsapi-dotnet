@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using WSApi.Client.Models.Entities.Chats;
+using WSApi.Client.Models.Entities.Messages;
 using WSApi.Client.Models.Requests.Chats;
 
 namespace WSApi.Client.ApiClient;
@@ -39,7 +40,7 @@ public class ChatsClient(HttpClient httpClient) : IChatsClient
 
     public async Task UpdatePresenceAsync(string chatId, ChatUpdatePresenceRequest chatUpdatePresenceRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/chats/{chatId}/presence/set", chatUpdatePresenceRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/chats/{chatId}/presence", chatUpdatePresenceRequest, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
     
@@ -88,13 +89,19 @@ public class ChatsClient(HttpClient httpClient) : IChatsClient
 
     public async Task ClearChatAsync(string chatId, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsync($"/chats/{chatId}/clear", null, cancellationToken);
+        var response = await httpClient.PostAsync($"/chats/{chatId}/clear", null, cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
     public async Task SynchronizeAllAsync(CancellationToken cancellationToken = default)
     {
         var response = await httpClient.PutAsync($"/chats/sync", null, cancellationToken);
+        await response.EnsureSuccessOrThrowAsync();
+    }
+
+    public async Task RequestMessagesAsync(string chatId, RequestMessagesRequest request, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.PostAsJsonAsync($"/chats/{chatId}/messages", request, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
     
@@ -128,7 +135,7 @@ public class ChatsClient(HttpClient httpClient) : IChatsClient
 
     public async Task<ApiResponse> TryUpdatePresenceAsync(string chatId, ChatUpdatePresenceRequest chatUpdatePresenceRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/chats/{chatId}/presence/set", chatUpdatePresenceRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PutAsJsonAsync($"/chats/{chatId}/presence", chatUpdatePresenceRequest, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
     
@@ -177,7 +184,7 @@ public class ChatsClient(HttpClient httpClient) : IChatsClient
 
     public async Task<ApiResponse> TryClearChatAsync(string chatId, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsync($"/chats/{chatId}/clear", null, cancellationToken);
+        var response = await httpClient.PostAsync($"/chats/{chatId}/clear", null, cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 
@@ -187,6 +194,11 @@ public class ChatsClient(HttpClient httpClient) : IChatsClient
         return await response.ReadAsApiResponseAsync();
     }
 
+    public async Task<ApiResponse> TryRequestMessagesAsync(string chatId, RequestMessagesRequest request, CancellationToken cancellationToken = default)
+    {
+        var response = await httpClient.PostAsJsonAsync($"/chats/{chatId}/messages", request, cancellationToken: cancellationToken);
+        return await response.ReadAsApiResponseAsync();
+    }
 }
 
 public interface IChatsClient
@@ -205,7 +217,7 @@ public interface IChatsClient
     Task DeleteChatAsync(string chatId, CancellationToken cancellationToken = default);
     Task ClearChatAsync(string chatId, CancellationToken cancellationToken = default);
     Task SynchronizeAllAsync(CancellationToken cancellationToken = default);
-    
+    Task RequestMessagesAsync(string chatId, RequestMessagesRequest request, CancellationToken cancellationToken = default);
 
     Task<ApiResponse<ChatInfo[]>> TryListAsync(CancellationToken cancellationToken = default);
     Task<ApiResponse<ChatInfo>> TryGetAsync(string chatId, CancellationToken cancellationToken = default);
@@ -221,5 +233,5 @@ public interface IChatsClient
     Task<ApiResponse> TryDeleteChatAsync(string chatId, CancellationToken cancellationToken = default);
     Task<ApiResponse> TryClearChatAsync(string chatId, CancellationToken cancellationToken = default);
     Task<ApiResponse> TrySynchronizeAllAsync(CancellationToken cancellationToken = default);
-
+    Task<ApiResponse> TryRequestMessagesAsync(string chatId, RequestMessagesRequest request, CancellationToken cancellationToken = default);
 }
