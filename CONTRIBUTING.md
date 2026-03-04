@@ -4,7 +4,7 @@ Thank you for your interest in contributing to the WSAPI .NET SDK! This guide wi
 
 ## Prerequisites
 
-- [.NET SDK 9.0+](https://dotnet.microsoft.com/download) (builds also target .NET 7.0 and 8.0)
+- [.NET SDK 10.0+](https://dotnet.microsoft.com/download) (builds also target .NET 8.0 and 9.0)
 - A code editor (Visual Studio, Rider, or VS Code with C# Dev Kit)
 - Git
 

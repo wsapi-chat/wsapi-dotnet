@@ -4,7 +4,7 @@ This file provides guidance to AI agents on how to work with this repository. It
 
 ## Project
 
-WSApi.Client — .NET SDK for the WSApi WhatsApp API. NuGet package targeting net7.0, net8.0, net9.0.
+WSApi.Client — .NET SDK for the WSApi WhatsApp API. NuGet package targeting net8.0, net9.0, net10.0.
 
 ## Commands
 

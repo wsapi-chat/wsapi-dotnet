@@ -1,6 +1,6 @@
 ﻿# WSApi.Client (.NET SDK)
 
-[![.NET](https://img.shields.io/badge/.NET-7.0%20|%208.0%20|%209.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com)
+[![.NET](https://img.shields.io/badge/.NET-8.0%20|%209.0%20|%2010.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/wsapi-chat/wsapi-dotnet/actions/workflows/ci.yml/badge.svg)](https://github.com/wsapi-chat/wsapi-dotnet/actions/workflows/ci.yml)
 [![NuGet](https://img.shields.io/nuget/v/WSApi.Client?logo=nuget&logoColor=white)](https://www.nuget.org/packages/WSApi.Client)
@@ -22,7 +22,7 @@ A .NET SDK for integrating with the WSApi API, enabling developers to send Whats
 ## Getting Started
 
 ### Prerequisites
-- .NET 6.0 or later (change .csproj `TargetFramework` tag if necessary)
+- .NET 8.0 or later
 - Access to the WSApi API (Valid instance with ID and API key)
 
 ### Installation
