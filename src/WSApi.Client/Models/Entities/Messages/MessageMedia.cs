@@ -4,6 +4,7 @@ namespace WSApi.Client.Models.Entities.Messages;
 
 public record MessageMedia
 {
+    [JsonPropertyName("filename")] public string? Filename { get; init; }
     [JsonPropertyName("id")] public string Id { get; init; } = null!;
     [JsonPropertyName("mediaType")] public string MediaType { get; init; } = null!;
     [JsonPropertyName("mimeType")] public string? Mimetype { get; init; }

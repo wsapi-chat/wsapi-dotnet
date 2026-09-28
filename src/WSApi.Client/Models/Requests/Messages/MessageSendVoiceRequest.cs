@@ -4,6 +4,12 @@ namespace WSApi.Client.Models.Requests.Messages;
 
 public record MessageSendVoiceRequest : MessageRequestBase
 {
+    [JsonPropertyName("caption")]
+    public string? Caption { get; init; }
+
+    [JsonPropertyName("mimeType")]
+    public string? MimeType { get; init; }
+
     /// <summary>
     ///  Base64 encoded voice data. It should be OGG format
     /// </summary>

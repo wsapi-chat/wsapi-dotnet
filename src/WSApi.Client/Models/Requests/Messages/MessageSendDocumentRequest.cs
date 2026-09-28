@@ -4,6 +4,12 @@ namespace WSApi.Client.Models.Requests.Messages;
 
 public record MessageSendDocumentRequest : MessageRequestBase
 {
+    [JsonPropertyName("mimeType")]
+    public string? MimeType { get; init; }
+
+    [JsonPropertyName("viewOnce")]
+    public bool? ViewOnce { get; init; }
+
     /// <summary>
     ///  The document to send, encoded in base64.
     /// </summary>

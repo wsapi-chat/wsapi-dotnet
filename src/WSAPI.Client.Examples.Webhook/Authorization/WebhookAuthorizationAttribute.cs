@@ -34,11 +34,11 @@ public class WebhookAuthorizationAttribute : Attribute, IAsyncAuthorizationFilte
 
         // Read and buffer the request body so downstream can still read it
         context.HttpContext.Request.EnableBuffering();
-        using var reader = new StreamReader(context.HttpContext.Request.Body, Encoding.UTF8, leaveOpen: true);
-        var body = await reader.ReadToEndAsync();
+        using var body = new MemoryStream();
+        await context.HttpContext.Request.Body.CopyToAsync(body, context.HttpContext.RequestAborted);
         context.HttpContext.Request.Body.Position = 0;
 
-        var expectedSignature = SignaturePrefix + ComputeHmacSha256(body, signingSecret);
+        var expectedSignature = SignaturePrefix + ComputeHmacSha256(body.ToArray(), signingSecret);
 
         if (!CryptographicOperations.FixedTimeEquals(
                 Encoding.UTF8.GetBytes(expectedSignature),
@@ -48,11 +48,10 @@ public class WebhookAuthorizationAttribute : Attribute, IAsyncAuthorizationFilte
         }
     }
 
-    private static string ComputeHmacSha256(string payload, string secret)
+    private static string ComputeHmacSha256(byte[] payload, string secret)
     {
         var keyBytes = Encoding.UTF8.GetBytes(secret);
-        var payloadBytes = Encoding.UTF8.GetBytes(payload);
-        var hash = HMACSHA256.HashData(keyBytes, payloadBytes);
+        var hash = HMACSHA256.HashData(keyBytes, payload);
         return Convert.ToHexStringLower(hash);
     }
 }

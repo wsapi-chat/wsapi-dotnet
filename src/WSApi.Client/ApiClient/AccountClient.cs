@@ -85,9 +85,9 @@ public class AccountClient(HttpClient httpClient) : IAccountClient
         return await response.EnsureSuccessOrThrowJsonAsync<PagedResult<AccountInstance>>();
     }
 
-    public async Task<string> CreateSubscriptionInstance(string id, CancellationToken cancellationToken = default)
+    public async Task<string> CreateSubscriptionInstance(string id, CancellationToken cancellationToken = default, string? name = null)
     {
-        var response = await httpClient.PostAsync($"/account/subscriptions/{id}/instances", null, cancellationToken);
+        var response = await httpClient.PostAsync($"/account/subscriptions/{id}/instances" + (name is null ? "" : "?name=" + Uri.EscapeDataString(name)), null, cancellationToken);
         return await response.EnsureSuccessOrThrowJsonAsync<string>();
     }
 
@@ -176,9 +176,9 @@ public class AccountClient(HttpClient httpClient) : IAccountClient
         return await response.ReadAsApiResponseJsonAsync<PagedResult<AccountInstance>>();
     }
 
-    public async Task<ApiResponse<string>> TryCreateSubscriptionInstance(string id, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<string>> TryCreateSubscriptionInstance(string id, CancellationToken cancellationToken = default, string? name = null)
     {
-        var response = await httpClient.PostAsync($"/account/subscriptions/{id}/instances", null, cancellationToken);
+        var response = await httpClient.PostAsync($"/account/subscriptions/{id}/instances" + (name is null ? "" : "?name=" + Uri.EscapeDataString(name)), null, cancellationToken);
         return await response.ReadAsApiResponseJsonAsync<string>();
     }
 
@@ -249,7 +249,7 @@ public interface IAccountClient
     Task<PagedResult<AccountInstance>> ListSubscriptionInstances(string id, int? pageNumber = null, int? pageSize = null,
         DateTime? createdFrom = null, DateTime? createdTo = null, string? status = null,
         CancellationToken cancellationToken = default);
-    Task<string> CreateSubscriptionInstance(string id, CancellationToken cancellationToken = default);
+    Task<string> CreateSubscriptionInstance(string id, CancellationToken cancellationToken = default, string? name = null);
     Task DeleteSubscriptionInstance(string id, string instanceId, CancellationToken cancellationToken = default);
     Task<PagedResult<AccountSubscriptionChange>> ListSubscriptionChanges(string id, int? pageNumber = null, int? pageSize = null,
         DateTime? timestampFrom = null, DateTime? timestampTo = null, string? changeType = null, string? instanceId = null,
@@ -271,7 +271,7 @@ public interface IAccountClient
     Task<ApiResponse<PagedResult<AccountInstance>>> TryListSubscriptionInstances(string id, int? pageNumber = null, int? pageSize = null,
         DateTime? createdFrom = null, DateTime? createdTo = null, string? status = null,
         CancellationToken cancellationToken = default);
-    Task<ApiResponse<string>> TryCreateSubscriptionInstance(string id, CancellationToken cancellationToken = default);
+    Task<ApiResponse<string>> TryCreateSubscriptionInstance(string id, CancellationToken cancellationToken = default, string? name = null);
     Task<ApiResponse> TryDeleteSubscriptionInstance(string id, string instanceId, CancellationToken cancellationToken = default);
     Task<ApiResponse<PagedResult<AccountSubscriptionChange>>> TryListSubscriptionChanges(string id, int? pageNumber = null, int? pageSize = null,
         DateTime? timestampFrom = null, DateTime? timestampTo = null, string? changeType = null, string? instanceId = null,

@@ -4,6 +4,9 @@ namespace WSApi.Client.Models.Requests.Messages;
 
 public record MessageSendAudioRequest : MessageRequestBase
 {
+    [JsonPropertyName("caption")]
+    public string? Caption { get; init; }
+
     /// <summary>
     ///  Base64 encoded audio data.
     /// </summary>

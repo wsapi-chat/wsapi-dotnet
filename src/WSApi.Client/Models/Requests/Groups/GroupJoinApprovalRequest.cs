@@ -4,5 +4,5 @@ namespace WSApi.Client.Models.Requests.Groups;
 
 public record GroupJoinApprovalRequest
 {
-    [JsonPropertyName("joinApproval")] public bool JoinApproval { get; init; }
+    [JsonPropertyName("enabled")] public bool JoinApproval { get; init; }
 }

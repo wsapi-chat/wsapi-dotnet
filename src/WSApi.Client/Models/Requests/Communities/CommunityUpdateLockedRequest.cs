@@ -4,5 +4,5 @@ namespace WSApi.Client.Models.Requests.Communities;
 
 public record CommunityUpdateLockedRequest
 {
-    [JsonPropertyName("locked")] public bool Locked { get; init; }
+    [JsonPropertyName("enabled")] public bool Locked { get; init; }
 }

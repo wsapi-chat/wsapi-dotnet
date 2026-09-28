@@ -102,7 +102,8 @@ public class GroupsClient(HttpClient httpClient) : IGroupsClient
     public async Task<GroupJoined> JoinWithInviteAsync(GroupJoinWithInviteRequest request, CancellationToken cancellationToken = default)
     {
         var response = await httpClient.PostAsJsonAsync("/groups/join/invite", request, cancellationToken: cancellationToken);
-        return await response.EnsureSuccessOrThrowJsonAsync<GroupJoined>();
+        await response.EnsureSuccessOrThrowAsync();
+        return new GroupJoined { GroupId = request.GroupId };
     }
 
     public async Task<GroupJoinRequest[]> GetJoinRequestsAsync(string groupId, CancellationToken cancellationToken = default)
@@ -224,7 +225,8 @@ public class GroupsClient(HttpClient httpClient) : IGroupsClient
     public async Task<ApiResponse<GroupJoined>> TryJoinWithInviteAsync(GroupJoinWithInviteRequest request, CancellationToken cancellationToken = default)
     {
         var response = await httpClient.PostAsJsonAsync("/groups/join/invite", request, cancellationToken: cancellationToken);
-        return await response.ReadAsApiResponseJsonAsync<GroupJoined>();
+        var result = await response.ReadAsApiResponseAsync();
+        return new ApiResponse<GroupJoined> { Error = result.Error, Result = result.IsSuccess ? new GroupJoined { GroupId = request.GroupId } : null };
     }
 
     public async Task<ApiResponse<GroupJoinRequest[]>> TryGetJoinRequestsAsync(string groupId, CancellationToken cancellationToken = default)

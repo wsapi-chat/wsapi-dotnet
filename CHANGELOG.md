@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.0.0]
+
+QR image methods now read bytes and QR text methods unwrap `code`. Fixed JSON names for group/community settings and invitation responses while preserving C# request properties. Join-by-invite accepts HTTP 204 and returns the requested group ID for compatibility. Contact Update uses POST upsert. Breaking change: removed ChatsClient/IChatsClient SynchronizeAllAsync and TrySynchronizeAllAsync because their endpoint no longer exists; use ListAsync or RequestMessagesAsync for a specific chat. Added optional instance name (after CancellationToken), optional media fields, ad referral and media filename. Added an executable contract-test project.
 
 ## [2.0.0] - 2026-03-04
 

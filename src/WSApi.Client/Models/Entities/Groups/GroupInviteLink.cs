@@ -4,5 +4,5 @@ namespace WSApi.Client.Models.Entities.Groups;
 
 public record GroupInviteLink
 {
-    [JsonPropertyName("inviteLink")] public string InviteLink { get; init; } = null!;
+    [JsonPropertyName("link")] public string InviteLink { get; init; } = null!;
 }

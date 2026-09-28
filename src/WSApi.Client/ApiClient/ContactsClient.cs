@@ -29,7 +29,7 @@ public class ContactsClient(HttpClient httpClient) : IContactsClient
 
     public async Task UpdateAsync(string contactId, ContactUpdateRequest updateRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/contacts/{contactId}", updateRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync("/contacts", new ContactCreateRequest { Id = contactId, FullName = updateRequest.FullName, FirstName = updateRequest.FirstName }, cancellationToken: cancellationToken);
         await response.EnsureSuccessOrThrowAsync();
     }
 
@@ -78,7 +78,7 @@ public class ContactsClient(HttpClient httpClient) : IContactsClient
 
     public async Task<ApiResponse> TryUpdateAsync(string contactId, ContactUpdateRequest updateRequest, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.PutAsJsonAsync($"/contacts/{contactId}", updateRequest, cancellationToken: cancellationToken);
+        var response = await httpClient.PostAsJsonAsync("/contacts", new ContactCreateRequest { Id = contactId, FullName = updateRequest.FullName, FirstName = updateRequest.FirstName }, cancellationToken: cancellationToken);
         return await response.ReadAsApiResponseAsync();
     }
 

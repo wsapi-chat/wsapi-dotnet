@@ -10,13 +10,13 @@ public class SessionClient(HttpClient httpClient) : ISessionClient
     public async Task<byte[]> GetLoginQRImageAsync(CancellationToken cancellationToken = default)
     {
         var response = await httpClient.GetAsync($"/session/qr", cancellationToken);
-        return await response.EnsureSuccessOrThrowJsonAsync<byte[]>();
+        return await response.EnsureSuccessOrThrowByteArrayAsync();
     }
 
     public async Task<string> GetLoginQRCodeAsync(CancellationToken cancellationToken = default)
     {
         var response = await httpClient.GetAsync($"/session/qr/text", cancellationToken);
-        return await response.EnsureSuccessOrThrowJsonAsync<string>();
+        return (await response.EnsureSuccessOrThrowJsonAsync<SessionQrCode>()).Code;
     }
 
     public async Task<SessionPairCode> GetLoginPairCodeAsync(string phoneNumber, CancellationToken cancellationToken = default)
@@ -46,13 +46,14 @@ public class SessionClient(HttpClient httpClient) : ISessionClient
     public async Task<ApiResponse<byte[]>> TryGetLoginQRImageAsync(CancellationToken cancellationToken = default)
     {
         var response = await httpClient.GetAsync($"/session/qr", cancellationToken);
-        return await response.ReadAsApiResponseJsonAsync<byte[]>();
+        return await response.ReadAsApiResponseByteArrayAsync();
     }
 
     public async Task<ApiResponse<string>> TryGetLoginQRCodeAsync(CancellationToken cancellationToken = default)
     {
         var response = await httpClient.GetAsync($"/session/qr/text", cancellationToken);
-        return await response.ReadAsApiResponseJsonAsync<string>();
+        var result = await response.ReadAsApiResponseJsonAsync<SessionQrCode>();
+        return new ApiResponse<string> { Result = result.Result?.Code, Error = result.Error };
     }
 
     public async Task<ApiResponse<SessionPairCode>> TryGetLoginPairCodeAsync(string phoneNumber, CancellationToken cancellationToken = default)

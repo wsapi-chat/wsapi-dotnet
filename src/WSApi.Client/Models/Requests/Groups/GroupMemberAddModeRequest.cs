@@ -4,5 +4,5 @@ namespace WSApi.Client.Models.Requests.Groups;
 
 public record GroupMemberAddModeRequest
 {
-    [JsonPropertyName("onlyAdmins")] public bool OnlyAdmins { get; init; }
+    [JsonPropertyName("onlyAdminAdd")] public bool OnlyAdmins { get; init; }
 }

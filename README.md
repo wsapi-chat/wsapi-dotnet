@@ -135,7 +135,7 @@ For each API method available in the SDK, there are **two versions** to handle d
 try
 {
     var result = await messagesClient.SendTextAsync(request);
-    Console.WriteLine($"Message sent with ID: {result.MessageId}");
+    Console.WriteLine($"Message sent with ID: {result.Id}");
 }
 catch (ApiException ex)
 {
@@ -146,7 +146,7 @@ catch (ApiException ex)
 var response = await messagesClient.TrySendTextAsync(request);
 if (response.IsSuccess)
 {
-    Console.WriteLine($"Message sent with ID: {response.Result.MessageId}");
+    Console.WriteLine($"Message sent with ID: {response.Result?.Id}");
 }
 else
 {
@@ -158,110 +158,19 @@ else
 
 #### a) Webhooks
 
-1. **Configure your webhook URL** in the WSApi dashboard.
+Configure the webhook URL and signing secret on your instance. Validate the `X-Webhook-Signature` HMAC-SHA256 signature against the **original request bytes**, before parsing the event. Missing or invalid signatures must be rejected with HTTP 401 when signing is enabled.
 
-2. **Set up authentication** using the `WebhookAuthorizationAttribute`:
-
-```csharp
-// Authorization/WebhookAuthorizationAttribute.cs
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-public class WebhookAuthorizationAttribute : Attribute, IAuthorizationFilter
-{
-    public void OnAuthorization(AuthorizationFilterContext context)
-    {
-        var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
-        var webhookHeader = configuration["WSAPI:WebhookHeader"];
-        var webhookSecret = configuration["WSAPI:WebhookSecret"];
-
-        if (string.IsNullOrEmpty(webhookHeader) || string.IsNullOrEmpty(webhookSecret))
-            return; // Skip validation if not configured
-
-        if (!context.HttpContext.Request.Headers.TryGetValue(webhookHeader, out var headerValue) || headerValue != webhookSecret)
-        {
-            context.Result = new UnauthorizedObjectResult("Invalid or missing webhook secret");
-        }
-    }
-}
-```
-
-3. **Configure your application** in `Program.cs`:
+The runnable [webhook example](src/WSAPI.Client.Examples.Webhook) includes a buffering authorization filter and controller. Configure `WSAPI:SigningSecret` to match the instance; a static `X-Auth-Secret` header is not the WSAPI signature protocol. Keep production secrets outside committed configuration.
 
 ```csharp
-using WSApi.Client;
-
-var builder = WebApplication.CreateBuilder(args);
-
-// Configure WSAPI Client
-var apiKey = builder.Configuration["WSAPI:ApiKey"] ?? throw new InvalidOperationException("WSAPI:ApiKey is not set in configuration");
-var instanceId = builder.Configuration["WSAPI:InstanceId"] ?? throw new InvalidOperationException("WSAPI:InstanceId is not set in configuration");
-builder.Services.AddWsApiClient(apiKey, instanceId);
-
-builder.Services.AddControllers();
-
-var app = builder.Build();
-app.UseRouting();
-app.MapControllers();
-app.Run();
-```
-
-4. **Create your webhook controller**:
-
-```csharp
-using Microsoft.AspNetCore.Mvc;
-using WSApi.Client;
-using WSApi.Client.Models.Constants;
-using WSApi.Client.Models.Events.Messages;
-
-[ApiController]
-[Route("wsapi")]
-public class WebhookController : ControllerBase
+var evt = EventFactory.ParseEvent(json);
+if (evt is MessageEvent message)
 {
-    private readonly ILogger<WebhookController> _logger;
-
-    public WebhookController(ILogger<WebhookController> logger)
-    {
-        _logger = logger;
-    }
-
-    [WebhookAuthorization]
-    [HttpPost("webhook")]
-    public async Task<IActionResult> Webhook(CancellationToken cancellationToken)
-    {
-        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync(cancellationToken);
-        var evt = EventFactory.ParseEvent(json);
-        
-        switch (evt.EventType)
-        {
-            case EventTypes.Message:
-                var messageEvent = (MessageEvent)evt;
-                _logger.LogInformation("Message received: {Text} From: {From} at {ReceivedAt}", 
-                    messageEvent.Text, messageEvent.Sender.User, messageEvent.ReceivedAt);
-                break;
-            
-            // Handle other event types as needed
-        }
-        
-        return Ok();
-    }
+    Console.WriteLine($"Message from {message.Sender.Id}: {message.Text}");
+    // Optional attribution, also present on messages inside history events:
+    var clickId = message.AdReferral?.CtwaClid;
 }
 ```
-
-5. **Configure authentication in `appsettings.json`**:
-
-```json
-{
-  "WSAPI": {
-    "ApiKey": "sk_your_api_key_here",
-    "InstanceId": "ins_your_instance_id_here",
-    "WebhookHeader": "X-Auth-Secret",
-    "WebhookSecret": "your_webhook_secret_here"
-  }
-}
-```
-
-The webhook authorization is not required, but strongly recommended. The `WebhookAuthorizationAttribute` validates incoming webhook requests by checking for a specific header (configured as `WebhookHeader`) containing a secret value (configured as `WebhookSecret`). This ensures that only authorized requests from WSApi reach your webhook endpoint. If the header is missing or contains an incorrect value, the request is rejected with a 401 Unauthorized response.
 
 #### b) SSE (Server-Sent Events)
 
@@ -343,7 +252,7 @@ public class SSEClientService : BackgroundService
                 case EventTypes.Message:
                     var messageEvent = (MessageEvent)evt;
                     _logger.LogInformation("Message received: {Text} From: {From} at {ReceivedAt}", 
-                        messageEvent.Text, messageEvent.SenderName, messageEvent.ReceivedAt);
+                        messageEvent.Text, messageEvent.Sender.Id, messageEvent.ReceivedAt);
                     break;
 
                 // Add more event type handlers as needed
@@ -435,3 +344,7 @@ The SDK supports the following event types that you can handle in your applicati
 - `CallTerminateEvent` - Call termination
 
 You only need to implement handlers for the events relevant to your application. The `EventFactory.ParseEvent()` method automatically deserializes the JSON into the appropriate strongly-typed event object.
+
+## Unreleased contract update
+
+The working source includes current REST routes and payloads, optional ad attribution on message/history events, and the optional name when creating a Cloud subscription instance. These changes are not published yet. See [CHANGELOG.md](CHANGELOG.md) for compatibility details. Cloud Account management and SSE are not the OSS administrative API; OSS uses `/admin/instances` and webhook/Redis event delivery.

@@ -4,5 +4,5 @@ namespace WSApi.Client.Models.Entities.Groups;
 
 public record GroupJoined
 {
-    [JsonPropertyName("groupId")] public string GroupId { get; init; } = null!;
+    [JsonPropertyName("id")] public string GroupId { get; init; } = null!;
 }
