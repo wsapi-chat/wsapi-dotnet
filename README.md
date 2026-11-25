@@ -154,6 +154,33 @@ else
 }
 ```
 
+#### Pairing and Passkey Verification
+
+Pair a device with `Session.GetLoginQRImageAsync()` / `GetLoginQRCodeAsync()` or `GetLoginPairCodeAsync(phone)`. Some WhatsApp accounts then require the owner's **passkey** (WebAuthn) before the link completes:
+
+- `Session.GetSessionStatusAsync()` reports `PasskeyStatus` (see `PasskeyStatuses`). While it is `required`, `submitted` or `confirmation_required` (`PasskeyStatuses.IsPending(...)`), **stop polling** the QR / pair-code endpoints: they return HTTP 409 (an `ApiException` / `ApiResponse.Error` with `Status == 409`) and generating a new code would discard the pairing.
+- `Session.GetPasskeyStateAsync()` returns the `PasskeyState`, including the WebAuthn `Challenge` and `Origin` while the status is `required`, and `ConfirmationCode` while it is `confirmation_required`.
+- The challenge must be signed in a browser on `https://web.whatsapp.com` with `navigator.credentials.get()` (a server cannot sign it). Send the JSON from `PublicKeyCredential.toJSON()` with `Session.SubmitPasskeyAsync(assertion)`; `PasskeyAssertion` deserializes directly from that JSON.
+- `Session.RequestPasskeyAsync()` asks WhatsApp for a challenge when the notification does not arrive, or to start a passkey-only link without a QR or pair code.
+- When the status is `confirmation_required`, show `ConfirmationCode` so the owner can compare it and approve on their phone. The server sends the confirmation automatically; `Session.ConfirmPasskeyAsync()` is an optional compatibility call.
+- The step expires 5 minutes after it is requested (`ExpiresAt`); the status then becomes `error` and a new QR or pair code must be generated.
+
+```csharp
+var status = await client.Session.GetSessionStatusAsync();
+if (PasskeyStatuses.IsPending(status.PasskeyStatus))
+{
+    var state = await client.Session.GetPasskeyStateAsync();
+    if (state.Status == PasskeyStatuses.Required)
+    {
+        // Hand state.Challenge to a browser on state.Origin, then submit the result:
+        var assertion = JsonSerializer.Deserialize<PasskeyAssertion>(credentialJsonFromBrowser)!;
+        state = await client.Session.SubmitPasskeyAsync(assertion);
+    }
+    if (state.Status == PasskeyStatuses.ConfirmationRequired)
+        Console.WriteLine($"Approve on your phone; code: {state.ConfirmationCode}");
+}
+```
+
 ### 2. Receiving Events
 
 #### a) Webhooks
@@ -347,4 +374,4 @@ You only need to implement handlers for the events relevant to your application.
 
 ## Unreleased contract update
 
-The working source includes current REST routes and payloads, optional ad attribution on message/history events, and the optional name when creating a Cloud subscription instance. These changes are not published yet. See [CHANGELOG.md](CHANGELOG.md) for compatibility details. Cloud Account management and SSE are not the OSS administrative API; OSS uses `/admin/instances` and webhook/Redis event delivery.
+The working source includes current REST routes and payloads, passkey pairing (`Session.*Passkey*`, `SessionStatus.PasskeyStatus`), optional group-creation participants, `UserInfo.VerifiedName`, optional ad attribution on message/history events, and the optional name when creating a Cloud subscription instance. These changes are not published yet. See [CHANGELOG.md](CHANGELOG.md) for compatibility details. Cloud Account management and SSE are not the OSS administrative API; OSS uses `/admin/instances` and webhook/Redis event delivery.

@@ -10,5 +10,10 @@ public record UserInfo
     [JsonPropertyName("device")] public int? Device { get; init; }
     [JsonPropertyName("isInWhatsApp")] public bool IsInWhatsApp { get; init; }
     [JsonPropertyName("status")] public string Status { get; init; } = null!;
+
+    /// <summary>Whether the account is a verified WhatsApp Business account.</summary>
     [JsonPropertyName("isVerified")] public bool IsVerified { get; init; }
+
+    /// <summary>Verified business name (null unless the account is a verified business).</summary>
+    [JsonPropertyName("verifiedName")] public string? VerifiedName { get; init; }
 }
