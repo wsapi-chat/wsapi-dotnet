@@ -6,7 +6,7 @@ public record SessionStatus
 {
     [JsonPropertyName("isConnected")] public bool Connected { get; init; }
     [JsonPropertyName("isLoggedIn")] public bool IsLoggedIn { get; init; }
-    [JsonPropertyName("deviceId")] public int? DeviceId { get; init; }
+    [JsonPropertyName("deviceId")] public string? DeviceId { get; init; }
 
     /// <summary>
     /// Passkey verification state (same as <see cref="PasskeyState.Status"/>; see
