@@ -372,6 +372,6 @@ The SDK supports the following event types that you can handle in your applicati
 
 You only need to implement handlers for the events relevant to your application. The `EventFactory.ParseEvent()` method automatically deserializes the JSON into the appropriate strongly-typed event object.
 
-## Unreleased contract update
+## Scope
 
-The working source includes current REST routes and payloads, passkey pairing (`Session.*Passkey*`, `SessionStatus.PasskeyStatus`), optional group-creation participants, `UserInfo.VerifiedName`, optional ad attribution on message/history events, and the optional name when creating a Cloud subscription instance. These changes are not published yet. See [CHANGELOG.md](CHANGELOG.md) for compatibility details. Cloud Account management and SSE are not the OSS administrative API; OSS uses `/admin/instances` and webhook/Redis event delivery.
+The SDK covers the current REST routes and payloads, passkey pairing (`Session.*Passkey*`, `SessionStatus.PasskeyStatus`), optional group-creation participants, `UserInfo.VerifiedName`, optional ad attribution on message/history events, and the optional name when creating a Cloud subscription instance. See [CHANGELOG.md](CHANGELOG.md) for compatibility details. Cloud Account management and SSE are not the OSS administrative API; OSS uses `/admin/instances` and webhook/Redis event delivery.

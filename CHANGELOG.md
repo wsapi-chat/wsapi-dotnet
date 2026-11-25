@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.2.0] - 2026-11-25
 
 ### Added
 - Passkey (WebAuthn) pairing on `SessionClient` / `ISessionClient`: `GetPasskeyStateAsync`, `SubmitPasskeyAsync`, `RequestPasskeyAsync`, `ConfirmPasskeyAsync` (optional, compatibility only: the server now confirms automatically) and their `Try*` variants, for `GET/POST /session/passkey`, `POST /session/passkey/request` and `POST /session/passkey/confirm`.
@@ -20,7 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `SessionStatus.DeviceId` is now `string?` (the device JID, e.g. `5491112345678:12@s.whatsapp.net`). It was `int?`, so reading the status of a paired instance threw a `JsonException`. **Breaking** for code that used it as a number
+- The bundled OpenAPI spec documented the `DeviceNotPaired` response with status 403; the API returns 409
+- `SessionStatus.DeviceId` is now `string?` (the device JID, e.g. `15550001111:12@s.whatsapp.net`). It was `int?`, so reading the status of a paired instance threw a `JsonException`. **Breaking** for code that used it as a number
 
 ## [3.0.0]
 
