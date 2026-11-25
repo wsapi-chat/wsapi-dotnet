@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Passkey (WebAuthn) pairing on `SessionClient` / `ISessionClient`: `GetPasskeyStateAsync`, `SubmitPasskeyAsync`, `RequestPasskeyAsync`, `ConfirmPasskeyAsync` (optional, compatibility only: the server now confirms automatically) and their `Try*` variants, for `GET/POST /session/passkey`, `POST /session/passkey/request` and `POST /session/passkey/confirm`.
+- Models `PasskeyState`, `PasskeyChallenge`, `PasskeyAllowCredential`, `PasskeyAssertion`, `PasskeyAssertionResponse` and constants `PasskeyStatuses` (with `IsPending`) and `PasskeySources`.
+- `SessionStatus.PasskeyStatus`.
+- `UserInfo.VerifiedName` (verified business name).
+
+### Changed
+- `GroupCreateRequest.Participants` is optional: leave it empty to create a group with only the paired account.
+- Documented that the QR and pair-code methods return HTTP 409 while a passkey step is pending; stop polling them until it completes, fails or expires.
+- `openapi/wsapi-api.yml` updated with the passkey endpoints and schemas, `409` on QR/pair-code routes, optional `CreateGroupRequest.participants` and `UserInfo.verifiedName`.
+
 ## [3.0.0]
 
 QR image methods now read bytes and QR text methods unwrap `code`. Fixed JSON names for group/community settings and invitation responses while preserving C# request properties. Join-by-invite accepts HTTP 204 and returns the requested group ID for compatibility. Contact Update uses POST upsert. Breaking change: removed ChatsClient/IChatsClient SynchronizeAllAsync and TrySynchronizeAllAsync because their endpoint no longer exists; use ListAsync or RequestMessagesAsync for a specific chat. Added optional instance name (after CancellationToken), optional media fields, ad referral and media filename. Added an executable contract-test project.

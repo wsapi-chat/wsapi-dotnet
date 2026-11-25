@@ -2,12 +2,16 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using WSApi.Client.ApiClient;
+using WSApi.Client.Models.Constants;
 using WSApi.Client.Models.Entities.Groups;
+using WSApi.Client.Models.Entities.Session;
+using WSApi.Client.Models.Entities.Users;
 using WSApi.Client.Models.Events.Messages;
 using WSApi.Client.Models.Requests.Communities;
 using WSApi.Client.Models.Requests.Contacts;
 using WSApi.Client.Models.Requests.Groups;
 using WSApi.Client.Models.Requests.Messages;
+using WSApi.Client.Models.Requests.Session;
 using Xunit;
 
 namespace WSApi.Client.Tests;
@@ -147,6 +151,134 @@ public class ContractTests
         await account.CreateSubscriptionInstance("sub", name: "A + B& C");
         await account.TryCreateSubscriptionInstance("sub", name: "A + B& C");
         Assert.All(handler.Calls, c => Assert.EndsWith("?name=A%20%2B%20B%26%20C", c.Path));
+    }
+
+    private const string PasskeyRequiredJson = """
+        {"status":"required","source":"requested","origin":"https://web.whatsapp.com",
+         "challenge":{"challenge":"Y2hhbA","timeout":600000,"rpId":"whatsapp.com",
+           "allowCredentials":[{"id":"Y3JlZA","type":"public-key","transports":["internal","hybrid"]}],
+           "userVerification":"required","extensions":{"appid":"x"}},
+         "requestedAt":"2026-11-25T10:00:00Z","expiresAt":"2026-11-25T10:05:00Z"}
+        """;
+
+    [Fact]
+    public async Task PasskeyEndpointsUseCurrentRoutesInBothVariants()
+    {
+        using var handler = new CaptureHandler(() => Json(PasskeyRequiredJson));
+        using var http = Client(handler);
+        var session = new SessionClient(http);
+        var assertion = new PasskeyAssertion
+        {
+            Id = "Y3JlZA",
+            RawId = "Y3JlZA",
+            Type = "public-key",
+            Response = new PasskeyAssertionResponse { ClientDataJson = "Y2Q", AuthenticatorData = "YWQ", Signature = "c2ln" }
+        };
+
+        var state = await session.GetPasskeyStateAsync();
+        Assert.Equal(PasskeyStatuses.Required, state.Status);
+        Assert.Equal(PasskeySources.Requested, state.Source);
+        Assert.Equal("whatsapp.com", state.Challenge!.RpId);
+        Assert.Equal(600000, state.Challenge.Timeout);
+        Assert.Equal(["internal", "hybrid"], state.Challenge.AllowCredentials![0].Transports!);
+        Assert.Equal("x", state.Challenge.Extensions!["appid"].GetString());
+        Assert.Equal(state.RequestedAt!.Value.AddMinutes(5), state.ExpiresAt);
+        Assert.Equal(PasskeyStatuses.Required, (await session.TryGetPasskeyStateAsync()).Result!.Status);
+        await session.SubmitPasskeyAsync(assertion);
+        Assert.True((await session.TrySubmitPasskeyAsync(assertion)).IsSuccess);
+        await session.RequestPasskeyAsync();
+        Assert.True((await session.TryRequestPasskeyAsync()).IsSuccess);
+
+        Assert.Equal(
+            [
+                (HttpMethod.Get, "/session/passkey"), (HttpMethod.Get, "/session/passkey"),
+                (HttpMethod.Post, "/session/passkey"), (HttpMethod.Post, "/session/passkey"),
+                (HttpMethod.Post, "/session/passkey/request"), (HttpMethod.Post, "/session/passkey/request"),
+            ],
+            handler.Calls.Select(c => (c.Method, c.Path)));
+        var body = JsonDocument.Parse(handler.Calls[2].Body!).RootElement;
+        Assert.Equal("Y3JlZA", body.GetProperty("rawId").GetString());
+        Assert.Equal("Y2Q", body.GetProperty("response").GetProperty("clientDataJSON").GetString());
+        Assert.Equal("c2ln", body.GetProperty("response").GetProperty("signature").GetString());
+        Assert.Equal(JsonValueKind.Null, body.GetProperty("response").GetProperty("userHandle").ValueKind);
+        Assert.Null(handler.Calls[4].Body);
+    }
+
+    [Fact]
+    public void PasskeyAssertionRoundTripsBrowserToJson()
+    {
+        const string browserJson = """
+            {"id":"a","rawId":"a","type":"public-key","authenticatorAttachment":"platform",
+             "response":{"clientDataJSON":"cd","authenticatorData":"ad","signature":"s","userHandle":"u"},
+             "clientExtensionResults":{}}
+            """;
+        var assertion = JsonSerializer.Deserialize<PasskeyAssertion>(browserJson)!;
+        Assert.Equal("u", assertion.Response.UserHandle);
+        var minimal = JsonSerializer.SerializeToElement(new PasskeyAssertion
+        {
+            RawId = "a",
+            Response = new PasskeyAssertionResponse { ClientDataJson = "cd", Signature = "s" }
+        });
+        Assert.False(minimal.TryGetProperty("id", out _));
+        Assert.False(minimal.TryGetProperty("type", out _));
+        Assert.False(minimal.GetProperty("response").TryGetProperty("authenticatorData", out _));
+    }
+
+    [Fact]
+    public async Task ConfirmPasskeyAcceptsNoContent()
+    {
+        using var handler = new CaptureHandler(() => new HttpResponseMessage(HttpStatusCode.NoContent));
+        using var http = Client(handler);
+        var session = new SessionClient(http);
+        await session.ConfirmPasskeyAsync();
+        Assert.True((await session.TryConfirmPasskeyAsync()).IsSuccess);
+        Assert.All(handler.Calls, c => Assert.Equal((HttpMethod.Post, "/session/passkey/confirm"), (c.Method, c.Path)));
+    }
+
+    [Fact]
+    public async Task QrAndPairCodeSurfacePasskeyPendingConflict()
+    {
+        using var handler = new CaptureHandler(() => new HttpResponseMessage(HttpStatusCode.Conflict)
+        {
+            Content = new StringContent("{\"status\":409,\"detail\":\"passkey verification pending\"}", Encoding.UTF8, "application/json")
+        });
+        using var http = Client(handler);
+        var session = new SessionClient(http);
+        Assert.Equal(409, (await session.TryGetLoginQRImageAsync()).Error!.Status);
+        Assert.Equal(409, (await session.TryGetLoginQRCodeAsync()).Error!.Status);
+        Assert.Equal(409, (await session.TryGetLoginPairCodeAsync("123")).Error!.Status);
+        var ex = await Assert.ThrowsAsync<ApiException>(() => session.GetLoginQRCodeAsync());
+        Assert.Equal(409, ex.Problem.Status);
+    }
+
+    [Fact]
+    public void SessionStatusExposesPasskeyStatus()
+    {
+        var status = JsonSerializer.Deserialize<SessionStatus>("{\"isConnected\":true,\"isLoggedIn\":false,\"passkeyStatus\":\"confirmation_required\"}")!;
+        Assert.Equal(PasskeyStatuses.ConfirmationRequired, status.PasskeyStatus);
+        Assert.True(PasskeyStatuses.IsPending(status.PasskeyStatus));
+        Assert.False(PasskeyStatuses.IsPending(PasskeyStatuses.Error));
+        Assert.Null(JsonSerializer.Deserialize<SessionStatus>("{\"isConnected\":true}")!.PasskeyStatus);
+    }
+
+    [Fact]
+    public async Task CreateGroupWithoutParticipantsSendsOnlyName()
+    {
+        using var handler = new CaptureHandler(() => Json("{\"id\":\"g\"}"));
+        using var http = Client(handler);
+        await new GroupsClient(http).CreateAsync(new GroupCreateRequest { Name = "Solo" });
+        var body = JsonDocument.Parse(handler.Calls[0].Body!).RootElement;
+        Assert.Equal("Solo", body.GetProperty("name").GetString());
+        Assert.Equal(0, body.GetProperty("participants").GetArrayLength());
+    }
+
+    [Fact]
+    public void UserInfoExposesVerifiedName()
+    {
+        var user = JsonSerializer.Deserialize<UserInfo>("{\"id\":\"u\",\"status\":\"\",\"isVerified\":true,\"verifiedName\":\"Acme\"}")!;
+        Assert.True(user.IsVerified);
+        Assert.Equal("Acme", user.VerifiedName);
+        Assert.Null(JsonSerializer.Deserialize<UserInfo>("{\"id\":\"u\"}")!.VerifiedName);
     }
 
     [Theory]
