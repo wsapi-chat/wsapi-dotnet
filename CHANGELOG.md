@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Documented that the QR and pair-code methods return HTTP 409 while a passkey step is pending; stop polling them until it completes, fails or expires.
 - `openapi/wsapi-api.yml` updated with the passkey endpoints and schemas, `409` on QR/pair-code routes, optional `CreateGroupRequest.participants` and `UserInfo.verifiedName`.
 
+### Fixed
+
+- `SessionStatus.DeviceId` is now `string?` (the device JID, e.g. `5491112345678:12@s.whatsapp.net`). It was `int?`, so reading the status of a paired instance threw a `JsonException`. **Breaking** for code that used it as a number
+
 ## [3.0.0]
 
 QR image methods now read bytes and QR text methods unwrap `code`. Fixed JSON names for group/community settings and invitation responses while preserving C# request properties. Join-by-invite accepts HTTP 204 and returns the requested group ID for compatibility. Contact Update uses POST upsert. Breaking change: removed ChatsClient/IChatsClient SynchronizeAllAsync and TrySynchronizeAllAsync because their endpoint no longer exists; use ListAsync or RequestMessagesAsync for a specific chat. Added optional instance name (after CancellationToken), optional media fields, ad referral and media filename. Added an executable contract-test project.
